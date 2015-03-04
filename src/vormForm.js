@@ -2,7 +2,7 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.directive('vormForm', [ function ( ) { 
+		.directive('vormForm', [ '$window', function ( $window ) { 
 			
 			return {
 				scope: true,
@@ -16,6 +16,8 @@
 						
 					function handleChange ( ) {
 						var outerArgs = arguments;
+						
+						// $element[0].dispatchEvent(new $window.Event('vormchange'));
 						
 						_.each(changeListeners, function ( listener ) {
 							listener.apply(ctrl, outerArgs);	
@@ -34,6 +36,21 @@
 					
 					ctrl.getFields = function ( ) {
 						return fields;	
+					};
+					
+					ctrl.getValues = function ( ) {
+						var obj;
+						
+						obj = _(fields).indexBy(function ( field ) {
+								return field.getName();
+							})
+							.mapValues(function ( field ) {
+								return field.getValue();
+							})
+							.value();
+							
+						return obj;
+							
 					};
 					
 					ctrl.changeListeners = changeListeners;

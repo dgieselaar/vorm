@@ -5,30 +5,20 @@
 		.directive('vormChange', [ '$parse', function ( $parse ) {
 			
 			return {
-				require: [ '?vorm', '?vormField' ],
-				link: function ( scope, element, attrs, controllers ) {
+				link: function ( scope, element, attrs ) {
 					
-					var [ vorm, vormField ] = controllers,
-						cb;
+					var cb;
 					
-					if(!attrs.vormChange) {
-						return;
-					}
+					cb = $parse(attrs.vormChange);
 					
-					if(!vorm && !vormField) {
-						throw new Error('vormChange needs either a vorm or a vormField controller.');
-					}
-					
-					function handleChange ( name, value, before ) {
+					function handleChange ( event, name ) {
 						cb(scope, {
-							$name: name,
-							$value: value,
-							$before: before
+							$event: event,
+							$name: name
 						});
 					}
 					
-					cb = $parse(attrs.vormChange);
-					vorm.changeListeners.push(handleChange);
+					element.bind('vormchange', handleChange);
 					
 				}
 			};

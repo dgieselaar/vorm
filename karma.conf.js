@@ -15,7 +15,8 @@ module.exports = function ( config ) {
 		],
 		reporters: [ 'progress', 'coverage' ],
 		preprocessors: {
-			'./src/**/*.js': [ 'babel', 'coverage' ]
+			'./src/**/*.js': [ 'babel', 'coverage' ],
+			'./test/**/*.js': [ 'babel' ]
 		},
 		babelPreprocessor: {
 			options: {

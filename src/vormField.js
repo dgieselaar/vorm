@@ -7,11 +7,11 @@
 			return {
 				scope: true,
 				require: [ 'vormField', '^?vormForm' ],
-				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
+				controller: [ '$scope', '$element', '$attrs', function ( $scope, $element, $attrs ) {
 					
 					var name = $scope.$eval($attrs.vormField) || $attrs.ngModel;
 					
-					angular.extend(this, new VormFieldCtrl(name));
+					angular.extend(this, new VormFieldCtrl(name, $element[0]));
 					
 				}],
 				controllerAs: 'vormField',

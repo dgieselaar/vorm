@@ -2,18 +2,14 @@
 (function ( ) { 
 	
 	angular.module('vorm')
-		.directive('vormChange', [ '$parse', function ( $parse ) {
+		.directive('vormSubmit', [ '$parse', function ( $parse ) {
 			
 			return {
-				require: [ 'vorm' ],
+				require: [ 'vormForm' ],
 				link: function ( scope, element, attrs, controllers ) {
 					
 					var [ vorm ] = controllers,
 						cb;
-					
-					if(!attrs.vormSubmit) {
-						return;
-					}
 					
 					function handleSubmit ( ) {
 						cb(scope, {
@@ -21,9 +17,9 @@
 						});
 					}
 					
-					
 					cb = $parse(attrs.vormSubmit);
-					vorm.changeListeners.push(handleSubmit);
+					
+					element.bind('submit', handleSubmit);
 					
 				}
 			};
