@@ -19,33 +19,46 @@ describe('vormField', function ( ) {
 		
 		let element,
 			ctrl,
-			modelCtrl;
+			formCtrl,
+			nameCtrl,
+			ageCtrl,
+			form;
 		
 		beforeEach(function ( ) {
 			
+			form = angular.element('<form vorm-form></form>');
+			$compile(form)($rootScope.$new());
+			
 			element = angular.element(`
 				<div vorm-field>
-					<input type="text" ng-model="name" name="name"/>
-					<input type="text" ng-model="age" name="age"/>
+					<input type="text" ng-model="name" name="name" ng-minlength="3"/>
+					<input type="text" ng-model="age" name="age" ng-required="true"/>
 				</div>
 			`);
 			
-			$compile(element)($rootScope.$new());
+			form.append(element);
+			
+			formCtrl = form.inheritedData('$vormFormController');
+			
+			$compile(element)(form.scope().$new());
 			
 			ctrl = element.inheritedData('$vormFieldController');
-			modelCtrl = element.find('input').inheritedData('$ngModelController');
+			nameCtrl = element.find('input').eq(0).inheritedData('$ngModelController');
+			ageCtrl = element.find('input').eq(1).inheritedData('$ngModelController');
+			
+			$rootScope.$digest();
 			
 		});
 		
 		it('should have the model', function ( )  {
 			
-			expect(ctrl.getModels()[0]).toBe(modelCtrl);
+			expect(ctrl.getModels()[0]).toBe(nameCtrl);
 			
 		});
 		
 		it('should return the modelValue', function ( ) {
 			
-			modelCtrl.$setViewValue('test');
+			nameCtrl.$setViewValue('test');
 			
 			expect(ctrl.getValue()).toBe('test');
 			
@@ -57,7 +70,7 @@ describe('vormField', function ( ) {
 			
 			$rootScope.$digest();
 			
-			expect(modelCtrl.$modelValue).toBe('test');
+			expect(nameCtrl.$modelValue).toBe('test');
 			
 		});
 		
@@ -91,12 +104,12 @@ describe('vormField', function ( ) {
 				
 				$rootScope.$digest();
 				
-				expect(modelCtrl.$modelValue).toBe('test');
+				expect(nameCtrl.$modelValue).toBe('test');
 			});
 			
 			it('should return the value as a list', function ( ) {
 				
-				modelCtrl.$setViewValue('test');
+				nameCtrl.$setViewValue('test');
 				
 				expect(ctrl.getValue()).toEqual([ 'test', undefined ]);
 				
@@ -120,13 +133,13 @@ describe('vormField', function ( ) {
 				
 				$rootScope.$digest();
 				
-				expect(modelCtrl.$modelValue).toBe('test');
+				expect(nameCtrl.$modelValue).toBe('test');
 				
 			});
 			
 			it('should return the value as key-value', function ( ) {
 				
-				modelCtrl.$setViewValue('test');
+				nameCtrl.$setViewValue('test');
 				
 				expect(ctrl.getValue()).toEqual({
 					name: 'test',
@@ -144,7 +157,7 @@ describe('vormField', function ( ) {
 				expect(ctrl.isPristine()).toBe(true);
 				expect(ctrl.isDirty()).toBe(false);
 				
-				modelCtrl.$setDirty();
+				nameCtrl.$setDirty();
 				
 				expect(ctrl.isPristine()).toBe(false);
 				expect(ctrl.isDirty()).toBe(true);
@@ -154,31 +167,74 @@ describe('vormField', function ( ) {
 				
 				ctrl.setDirty();
 				
-				expect(modelCtrl.$dirty).toBe(true);
+				expect(nameCtrl.$dirty).toBe(true);
 				
 				ctrl.setPristine();
 				
-				expect(modelCtrl.$pristine).toBe(true);
+				expect(nameCtrl.$pristine).toBe(true);
 				
 			});
 			
-			it('should reflect the model\'s touched state', function ( ) {
+			it('should reflect the model\'s touched/untouched state', function ( ) {
 				
 				expect(ctrl.isUntouched()).toBe(true);
 				expect(ctrl.isTouched()).toBe(false);
 				
-				modelCtrl.$setTouched();
+				nameCtrl.$setTouched();
 				
 				expect(ctrl.isUntouched()).toBe(false);
 				expect(ctrl.isTouched()).toBe(true);
 				
 			});
 			
-			it('should be valid', function ( ) {
+			it('should set the model\'s touched/untouched state', function ( ) {
+				
+				ctrl.setTouched();
+				
+				expect(nameCtrl.$touched).toBe(true);
+				
+				ctrl.setUntouched();
+				
+				expect(nameCtrl.$untouched).toBe(true);
+				
+			});
+			
+			it('should be invalid', function ( ) {
+				
+				expect(ctrl.isInvalid()).toBe(true);
+				
+			});
+			
+			it('should be invalid after age is set', function ( ) {
+				
+				ageCtrl.$setViewValue(10);
+				nameCtrl.$setViewValue('ab');
+				$rootScope.$digest();
+				
+				expect(ctrl.isInvalid()).toBe(true);
+				
+			});
+			
+			it('should be valid after name is set', function ( ) {
+				
+				ageCtrl.$setViewValue(10);
+				nameCtrl.$setViewValue('test');
+				
+				$rootScope.$digest();
 				
 				expect(ctrl.isValid()).toBe(true);
 				
 			});
+			
+		});
+
+		it('should unlink', function ( ) {
+			
+			expect(formCtrl.getFields().length).toBe(1);
+			
+			element.scope().$destroy();
+			
+			expect(formCtrl.getFields().length).toBe(0);
 			
 		});
 		
