@@ -1,13 +1,15 @@
 /*global require,__dirname*/
-var gulp = require('gulp'),
+var fs = require('fs'),
+	gulp = require('gulp'),
 	sourcemaps = require('gulp-sourcemaps'),
 	cached = require('gulp-cached'),
 	plumber = require('gulp-plumber'),
-	babel = require('gulp-babel'),
+	babel = require('gulp-babel-helpers'),
 	uglify = require('gulp-uglify'),
 	remember = require('gulp-remember'),
 	concat = require('gulp-concat'),
 	header = require('gulp-header'),
+	addsrc = require('gulp-add-src'),
 	karma = require('karma');
 	
 function getUnitTestFiles ( ) {
@@ -22,19 +24,26 @@ function getUnitTestFiles ( ) {
 }
 
 function js ( ) {
-	return gulp.src([ 'src/**/_*.js', 'src/**/*.js' ] )
+	var stream =  gulp.src([ 'src/**/_*.js', 'src/**/*.js' ] )
 		.pipe(sourcemaps.init())
 			.pipe(cached('js'))
 			.pipe(plumber())
 			.pipe(babel( {
 				blacklist: [ "useStrict" ]
-			}))
+			}, './helpers.js', './helpers.js'))
+			.pipe(addsrc.prepend('./helpers.js'))
 			.pipe(uglify())
 			.pipe(remember('js'))
 			.pipe(concat('vorm.js', { newLine: '' }))
 			.pipe(header('"use strict";'))
 		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('.'));
+		.pipe(gulp.dest('.'))
+		
+	stream.on('end', function ( ) {
+		fs.unlinkSync('./helpers.js');
+	});
+		
+	return stream;
 }
 
 gulp.task('default', function ( callback ) {
