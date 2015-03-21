@@ -32,6 +32,10 @@
 				ctrl.getName = function ( ) {
 					return name;
 				};
+				
+				ctrl.setName = function ( ) {
+					name = arguments[0];
+				};
 					
 				ctrl.addModel = function ( model ) {
 					models.push(model);

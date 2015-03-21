@@ -5,25 +5,19 @@
 		.directive('vormInput', [ function ( ) { 
 			
 			return {
-				require: [ '^?vormFieldGenerator' ],
-				scope: true,
+				require: [ '^?vormFieldTemplate' ],
+				scope: {
+					'modelDelegate': '&',
+					'config': '&',
+					'type': '&'
+				},
 				controllerAs: 'vormInput',
 				link: function ( scope, element, attrs, controllers, transclude ) {
 					
-					var [ vormFieldGenerator ] = controllers;
+					var [ vormFieldTemplate ] = controllers;
 					
-					if(vormFieldGenerator) {
-						
-						vormFieldGenerator.getInputTemplate()
-							.then(function ( compileFunc ) {
-								compileFunc(scope, function ( clone ) {
-									element.replaceWith(clone);
-								});
-							})
-							.catch(function ( error ) {
-								console.log('Error loading input template:', error);
-							});
-						
+					if(vormFieldTemplate) {
+						element.replaceWith(vormFieldTemplate.getModelCompiler()(scope));
 					} else if(transclude) {
 						transclude(function(clone) {
 						  	element.replaceWith(clone);
