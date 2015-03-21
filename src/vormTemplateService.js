@@ -15,15 +15,15 @@
 					ng-class="vormField.getClassObj()"
 					vorm-field
 					vorm-model-list
-					>
+				>
 					<div class="vorm-field-label">
 						{{vormFieldTemplate.getLabel()}}
 					</div>
 					
 					<ul class="vorm-input-list">
-						<li class="vorm-input" ng-repeat="model in vormModelList.getModelDelegates()">
+						<li class="vorm-input" ng-repeat="model in vormModelList.getDelegates()">
 							<vorm-input data-type="vormFieldTemplate.getInputType()" data-config="vormFieldTemplate.getInputData()" model-delegate="model"></vorm-input>
-							<button class="vorm-input-clear" type="button" ng-click="vormModelList.clearModelDelegate(model)">
+							<button class="vorm-input-clear" type="button" ng-click="vormModelList.clearDelegate(model)">
 							</button>
 						</li>
 					</ul>

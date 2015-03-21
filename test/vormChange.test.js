@@ -34,7 +34,7 @@ describe('vormSubmit', function ( ) {
 			
 			spyOn(formScope, 'handleNameChange');
 			
-			element.find('input').triggerHandler('vormchange', 'name');
+			element.find('input').triggerHandler('viewchange', 'name');
 			
 			expect(formScope.handleNameChange).toHaveBeenCalled();
 			
@@ -44,7 +44,7 @@ describe('vormSubmit', function ( ) {
 			
 			spyOn(formScope, 'handleFormChange');
 			
-			element.triggerHandler('vormchange', 'name');
+			element.triggerHandler('viewchange', 'name');
 			
 			expect(formScope.handleFormChange)
 				.toHaveBeenCalledWith('name');

@@ -10,11 +10,11 @@
 					var ctrl = this,
 						delegates = [];
 					
-					ctrl.getModelDelegates = function ( ) {
+					ctrl.getDelegates = function ( ) {
 						return delegates;	
 					};
 					
-					ctrl.clearModelDelegate = function ( delegate ) {
+					ctrl.clearDelegate = function ( delegate ) {
 						if(delegates.length === 1) {
 							delegate.value = undefined;
 						} else {
@@ -22,7 +22,7 @@
 						}
 					};
 					
-					ctrl.addModelDelegate = function ( name ) {
+					ctrl.addDelegate = function ( name ) {
 						var delegate;
 						
 						if(!name) {
@@ -30,7 +30,7 @@
 						}
 						
 						delegate = new ModelDelegate(name);
-						delegates.push(delegates);
+						delegates.push(delegate);
 					};
 				}],
 				controllerAs: 'vormModelList'

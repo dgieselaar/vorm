@@ -8,7 +8,8 @@
 				
 				var ctrl = {},
 					models = [],
-					changeListeners = [],
+					viewChangeListeners = [],
+					modelChangeListeners = [],
 					valueType = VormValueType.SINGLE;
 				
 				function setModelValue ( model, value ) {
@@ -25,8 +26,15 @@
 					model.$modelValue = $modelValue;
 				}
 				
-				function handleModelChange ( ) {
-					element.dispatchEvent(new VormEvent('vormchange', { name: name } ));
+				function handleViewChange ( ) {
+					element.dispatchEvent(new VormEvent('viewchange', { name: name } ));
+					_.invoke(viewChangeListeners, 'call', null, name);
+				}
+				
+				function handleFormatterCall ( ) {
+					// now we know the model has changed
+					element.dispatchEvent(new VormEvent('modelchange', { name: name } ));
+					_.invoke(modelChangeListeners, 'call', null, name);
 				}
 				
 				ctrl.getName = function ( ) {
@@ -39,12 +47,14 @@
 					
 				ctrl.addModel = function ( model ) {
 					models.push(model);
-					model.$viewChangeListeners.push(handleModelChange);
+					model.$viewChangeListeners.push(handleViewChange);
+					model.$formatters.push(handleFormatterCall);
 				};
 				
 				ctrl.removeModel = function ( model ) {
 					_.pull(models, model);
-					_.pull(model.$viewChangeListeners, handleModelChange);
+					_.pull(model.$viewChangeListeners, handleViewChange);
+					_.pull(model.$formatters, handleFormatterCall);
 				};
 				
 				ctrl.getModels = function ( ) {
@@ -116,7 +126,8 @@
 					}
 				};
 				
-				ctrl.changeListeners = changeListeners;
+				ctrl.viewChangeListeners = viewChangeListeners;
+				ctrl.modelChangeListeners = modelChangeListeners;
 				
 				'valid invalid dirty pristine touched untouched'.split(' ').forEach(function ( type ) {
 					var capitalized = type.substr(0,1).toUpperCase() + type.substr(1),

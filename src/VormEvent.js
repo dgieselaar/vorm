@@ -7,7 +7,7 @@
 			var VormEvent;
 			
 			try {
-				var event = new $window.CustomEvent('vormchange'); // jshint ignore:line
+				var event = new $window.CustomEvent('foo'); // jshint ignore:line
 				VormEvent = function ( type, data ) {
 					return new $window.CustomEvent(type, {
 						detail: data

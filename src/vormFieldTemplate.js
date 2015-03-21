@@ -40,7 +40,7 @@
 							vormField.setValueType(VormValueType.LIST);
 						}
 						
-						vormModelList.addModelDelegate();
+						vormModelList.addDelegate();
 					};
 					
 					ctrl.getLabel = function ( ) {

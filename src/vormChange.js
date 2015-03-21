@@ -18,7 +18,7 @@
 						});
 					}
 					
-					element.bind('vormchange', handleChange);
+					element.bind('viewchange', handleChange);
 					
 				}
 			};

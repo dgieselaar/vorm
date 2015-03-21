@@ -2,7 +2,7 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.directive('vormForm', [ '$window', function ( $window ) { 
+		.directive('vormForm', [ function ( ) { 
 			
 			return {
 				scope: true,
@@ -12,36 +12,12 @@
 					var ctrl = this,
 						fields = [],
 						changeListeners = [],
-						submitListeners = [];
+						submitListeners = [],
+						values = {};
 						
-					function handleChange ( ) {
-						var outerArgs = arguments;
-						
-						// $element[0].dispatchEvent(new $window.Event('vormchange'));
-						
-						_.each(changeListeners, function ( listener ) {
-							listener.apply(ctrl, outerArgs);	
-						});
-					}
-					
-					ctrl.addField = function ( field ) {
-						fields.push(field);
-						field.changeListeners.push(handleChange);
-					};
-					
-					ctrl.removeField = function ( field ) {
-						_.pull(fields, field);
-						_.pull(field.changeListeners, handleChange);
-					};
-					
-					ctrl.getFields = function ( ) {
-						return fields;	
-					};
-					
-					ctrl.getValues = function ( ) {
-						var obj;
-						
-						obj = _(fields).indexBy(function ( field ) {
+					function recalc ( ) {
+						values = _(fields)
+							.indexBy(function ( field ) {
 								return field.getName();
 							})
 							.mapValues(function ( field ) {
@@ -49,8 +25,43 @@
 							})
 							.value();
 							
-						return obj;
-							
+						Object.freeze(values);
+					}
+						
+					function handleChange ( ) {
+						var outerArgs = arguments;
+						
+						recalc();
+						
+						_.each(changeListeners, function ( listener ) {
+							listener.apply(ctrl, outerArgs);	
+						});
+					}
+					
+					function handleModelChange ( ) {
+						recalc();
+					}
+					
+					ctrl.addField = function ( field ) {
+						fields.push(field);
+						field.viewChangeListeners.push(handleChange);
+						field.modelChangeListeners.push(handleModelChange);
+						recalc();
+					};
+					
+					ctrl.removeField = function ( field ) {
+						_.pull(fields, field);
+						_.pull(field.viewChangeListeners, handleChange);
+						_.pull(field.modelChangeListeners, handleModelChange);
+						recalc();
+					};
+					
+					ctrl.getFields = function ( ) {
+						return fields;	
+					};
+					
+					ctrl.getValues = function ( ) {
+						return values;
 					};
 					
 					ctrl.changeListeners = changeListeners;
@@ -60,7 +71,7 @@
 						var capitalized = type.substr(0,1).toUpperCase() + type.substr(1),
 							getName = 'is' + capitalized,
 							setName = 'set' + capitalized,
-							method = [ 'valid', 'pristine', 'untouched' ] ? 'every' : 'some';
+							method = [ 'valid', 'pristine', 'untouched' ].indexOf(type) !== -1 ? 'every' : 'some';
 							
 						ctrl[getName] = function ( ) {
 							return fields[method](function ( field ) {
@@ -68,7 +79,7 @@
 							});
 						};
 						
-						if(method !== 'valid' && method !== 'invalid') {
+						if(!(type === 'valid' || type === 'invalid')) {
 							ctrl[setName] = function ( ) {
 								var outerArgs = arguments;
 								
@@ -80,7 +91,7 @@
 					});
 					
 					$element.bind('submit', function ( ) {
-						_.each(submitListeners, function ( fn ) { fn(); });
+						_.invoke(submitListeners, 'call', null, values);
 					});
 					
 					return ctrl;

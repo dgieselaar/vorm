@@ -1,4 +1,4 @@
-/*global angular,describe,beforeEach,inject,module,it,expect,spyOn*/
+/*global angular,describe,beforeEach,inject,module,it,expect*/
 describe('vormFieldTemplate', function ( ) {
 	
 	var $rootScope,
