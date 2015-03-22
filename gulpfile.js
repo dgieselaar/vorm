@@ -10,6 +10,7 @@ var fs = require('fs'),
 	concat = require('gulp-concat'),
 	header = require('gulp-header'),
 	addsrc = require('gulp-add-src'),
+	runSequence = require('run-sequence'),
 	karma = require('karma');
 	
 function getUnitTestFiles ( ) {
@@ -29,19 +30,16 @@ function js ( ) {
 			.pipe(cached('js'))
 			.pipe(plumber())
 			.pipe(babel( {
-				blacklist: [ "useStrict" ]
+				blacklist: [ "useStrict" ],
+				babelHelpers: {
+					outputType: 'var'
+				}
 			}, './helpers.js', './helpers.js'))
-			.pipe(addsrc.prepend('./helpers.js'))
 			.pipe(uglify())
 			.pipe(remember('js'))
 			.pipe(concat('vorm.js', { newLine: '' }))
-			.pipe(header('"use strict";'))
 		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('.'))
-		
-	stream.on('end', function ( ) {
-		fs.unlinkSync('./helpers.js');
-	});
+		.pipe(gulp.dest('.'));
 		
 	return stream;
 }
@@ -57,7 +55,30 @@ gulp.task('default', function ( callback ) {
 	
 });
 
-gulp.task('build', js);
+gulp.task('js', js);
+
+gulp.task('helper', function ( ) {
+	
+	var stream = gulp.src('./helpers.js')
+		.pipe(uglify())
+		.pipe(addsrc.append('./vorm.js'))
+		.pipe(concat('vorm.js', { newLine: ''}))
+		.pipe(header('"use strict";'))
+		.pipe(gulp.dest('.'));
+		
+	stream.on('end', function ( ) {
+		fs.unlinkSync('./helpers.js');
+	});
+	
+	return stream;
+	
+})
+
+gulp.task('build', function ( ) {
+	
+	runSequence('js', 'helper');
+	
+});
 
 gulp.task('test', function ( callback ) {
 	
@@ -66,6 +87,8 @@ gulp.task('test', function ( callback ) {
 		autoWatch: false,
 		singleRun: true,
 		files: getUnitTestFiles()
-	}, callback);
+	}, function ( ) {
+		callback();
+	});
 	
 });

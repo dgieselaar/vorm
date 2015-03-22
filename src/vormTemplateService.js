@@ -38,7 +38,7 @@
 					
 			
 			return {
-				$get: function ( $compile ) {
+				$get: [ '$compile', function ( $compile ) {
 					
 					
 					
@@ -72,8 +72,7 @@
 					
 					return vormTemplateService;
 					
-				},
-				$inject: [ '$compile' ]
+				}],
 			};
 			
 		}]);
