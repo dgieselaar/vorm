@@ -8,8 +8,8 @@
 				require: [ 'vormForm' ],
 				link: function ( scope, element, attrs, controllers ) {
 					
-					var [ vorm ] = controllers,
-						cb;
+					const [ vorm ] = controllers;
+					let cb;
 					
 					function handleSubmit ( ) {
 						cb(scope, {

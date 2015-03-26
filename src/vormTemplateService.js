@@ -4,29 +4,25 @@
 	angular.module('vorm')
 		.provider('vormTemplateService', [ function ( ) {
 			
-			var vormTemplateService = {},
-				defaultWrapper,
-				modelTemplates = {},
-				modelCompilers = {},
-				wrapper;
+			let defaultWrapper,
+				wrapper,
+				modelCompilers;
+				
+			const vormTemplateService = {},
+				modelTemplates = {};
 				
 			defaultWrapper = `
 				<div class="vorm-field"
 					ng-class="vormField.getClassObj()"
 					vorm-field
-					vorm-model-list
 				>
 					<div class="vorm-field-label">
 						{{vormFieldTemplate.getLabel()}}
 					</div>
 					
-					<ul class="vorm-input-list">
-						<li class="vorm-input" ng-repeat="model in vormModelList.getDelegates()">
-							<vorm-input data-type="vormFieldTemplate.getInputType()" data-config="vormFieldTemplate.getInputData()" model-delegate="model"></vorm-input>
-							<button class="vorm-input-clear" type="button" ng-click="vormModelList.clearDelegate(model)">
-							</button>
-						</li>
-					</ul>
+					<div class="vorm-input" ng-transclude>
+						
+					</div>
 					
 					<div class="vorm-field-status">
 						
@@ -34,13 +30,12 @@
 				</div>
 			`;
 			
-			modelTemplates.text = `<input type="text" placeholder="{{vormFieldTemplate.getPlaceholder()}}"/>`;
+			modelTemplates.text = `<input type="text" placeholder="{{vormFieldTemplate.getInputData().placeholder}}"/>`;
+			modelTemplates.number = `<input type="number"/>`;
 					
 			
 			return {
 				$get: [ '$compile', function ( $compile ) {
-					
-					
 					
 					vormTemplateService.getDefaultTemplate = function ( ) {
 						return defaultWrapper;	
@@ -48,7 +43,7 @@
 					
 					vormTemplateService.getModelCompiler = function ( type, template ) {
 						
-						var compiler;
+						let compiler;
 						
 						if(template) {
 							compiler = $compile(template);
@@ -65,8 +60,9 @@
 					
 					
 					modelCompilers = _.mapValues(modelTemplates, function ( tpl ) {
-						var el = angular.element(tpl);
+						const el = angular.element(tpl);
 						el.attr('ng-model', 'model.value');
+						el.attr('ng-required', 'vormInput.isRequired()');
 						return $compile(el);
 					});
 					

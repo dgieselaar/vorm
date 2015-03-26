@@ -7,9 +7,8 @@ describe('vormFieldTemplate', function ( ) {
 		tpl,
 		scope,
 		vormFormCtrl,
-		vormFieldCtrl,
-		vormFieldTemplateCtrl;
-		
+		vormFieldCtrl;
+				
 	beforeEach(module('vorm'));
 	
 	function compileWith ( config ) {
@@ -29,11 +28,12 @@ describe('vormFieldTemplate', function ( ) {
 		
 		$rootScope.$digest();
 		
-		tpl = form.find('div').eq(0);
+		tpl = form.children();
 		
-		vormFormCtrl = form.inheritedData('$vormFormController');
-		vormFieldTemplateCtrl = tpl.inheritedData('$vormFieldTemplateController');
-		vormFieldCtrl = tpl.inheritedData('$vormFieldController');
+		let children = form;
+		
+		vormFormCtrl = form.controller('vormForm');
+		vormFieldCtrl = vormFormCtrl.getFields()[0];
 	}
 	
 	beforeEach(inject([ '$rootScope', '$compile', function ( ) {
@@ -51,7 +51,7 @@ describe('vormFieldTemplate', function ( ) {
 			label: 'Test'
 		});
 		
-		expect(vormFieldCtrl).not.toBeUndefined();
+		expect(vormFieldCtrl).toBeDefined();
 		
 	});
 	
@@ -83,7 +83,7 @@ describe('vormFieldTemplate', function ( ) {
 			label: 'Test'
 		});
 		
-		expect(tpl.find('input').length).toBe(1);
+		expect(form.find('input').length).toBe(1);
 		
 	});
 	
@@ -99,9 +99,11 @@ describe('vormFieldTemplate', function ( ) {
 		
 	});
 	
-	it('should return the configuration data', function ( ) {
+	it('should return the data', function ( ) {
 		
-		var data = { foo: 'bar' };
+		let data = {
+			foo: 'bar'
+		};
 		
 		compileWith({
 			name: 'test',
@@ -109,7 +111,7 @@ describe('vormFieldTemplate', function ( ) {
 			data: data
 		});
 		
-		expect(vormFieldTemplateCtrl.getInputData()).toEqual(data);
+		expect(form.find('input').scope().data()).toEqual(data);
 		
 	});
 	

@@ -6,16 +6,19 @@
 			
 			return function ( name, element ) {
 				
-				var ctrl = {},
+				const ctrl = {},
 					models = [],
 					viewChangeListeners = [],
 					modelChangeListeners = [],
-					valueType = VormValueType.SINGLE;
+					prefix = 'vorm-field-';
+				
+				let valueType = VormValueType.SINGLE,
+					required;
 				
 				function setModelValue ( model, value ) {
 					// $$writeModelToScope calls the view listeners
 					// and we don't really want that
-					var { $viewChangeListeners, $modelValue } = model;
+					const { $viewChangeListeners, $modelValue } = model;
 						
 					model.$viewChangeListeners = [];
 					model.$modelValue = value;
@@ -62,7 +65,7 @@
 				};
 				
 				ctrl.getValue = function ( ) {
-					var value;
+					let value;
 					
 					switch(valueType) {
 						case VormValueType.SINGLE:
@@ -110,7 +113,7 @@
 						break;
 						
 						case VormValueType.NAMED:
-						let modelsToChange = models.concat();
+						const modelsToChange = models.concat();
 						_.each(value, function ( val, key ) {
 							var model = _.find(models, { $name: key });
 							if(model) {
@@ -126,11 +129,42 @@
 					}
 				};
 				
+				ctrl.isRequired = function ( ) {
+					return required;	
+				};
+				
+				ctrl.setRequired = function ( ) {
+					required = !!arguments[0];
+				};
+				
+				ctrl.isEmpty = function ( ) {
+					return models.every(function ( model ) {
+						return model.$isEmpty();
+					});
+				};
+				
+				let chain = _('valid invalid dirty pristine touched untouched required empty'.split(' '))
+						.map(function ( key ) {
+							return prefix + key;
+						})
+						.zipObject()
+						.mapValues(function ( value, key ) {
+							let m = key.substr(prefix.length);
+							return ctrl['is' + _.capitalize(m)]();
+						})
+						.each(function ( ) {
+							
+						});
+						
+				ctrl.getClassObj = function ( ) {
+					return chain.value();
+				};
+				
 				ctrl.viewChangeListeners = viewChangeListeners;
 				ctrl.modelChangeListeners = modelChangeListeners;
-				
+			
 				'valid invalid dirty pristine touched untouched'.split(' ').forEach(function ( type ) {
-					var capitalized = type.substr(0,1).toUpperCase() + type.substr(1),
+					const capitalized = _.capitalize(type),
 						getName = 'is' + capitalized,
 						propertyName = '$' + type,
 						setName = 'set' + capitalized,
@@ -142,7 +176,7 @@
 						});
 					};
 					
-					if(method !== 'valid' && method !== 'invalid') {
+					if(type !== 'valid' && type !== 'invalid') {
 						ctrl[setName] = function ( ) {
 							var outerArgs = arguments;
 							

@@ -9,11 +9,12 @@
 				require: [ 'form' ],
 				controller: [ '$element', function ( $element ) {
 					
-					var ctrl = this,
+					const ctrl = this,
 						fields = [],
 						changeListeners = [],
-						submitListeners = [],
-						values = {};
+						submitListeners = [];
+					
+					let values = {};
 						
 					function recalc ( ) {
 						values = _(fields)
@@ -29,7 +30,7 @@
 					}
 						
 					function handleChange ( ) {
-						var outerArgs = arguments;
+						const outerArgs = arguments;
 						
 						recalc();
 						
@@ -68,7 +69,7 @@
 					ctrl.submitListeners = submitListeners;
 					
 					'valid invalid dirty pristine touched untouched'.split(' ').forEach(function ( type ) {
-						var capitalized = type.substr(0,1).toUpperCase() + type.substr(1),
+						const capitalized = type.substr(0,1).toUpperCase() + type.substr(1),
 							getName = 'is' + capitalized,
 							setName = 'set' + capitalized,
 							method = [ 'valid', 'pristine', 'untouched' ].indexOf(type) !== -1 ? 'every' : 'some';
@@ -81,7 +82,7 @@
 						
 						if(!(type === 'valid' || type === 'invalid')) {
 							ctrl[setName] = function ( ) {
-								var outerArgs = arguments;
+								const outerArgs = arguments;
 								
 								fields.forEach(function ( field ) {
 									field[setName].apply(field, outerArgs);

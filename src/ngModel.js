@@ -8,7 +8,7 @@
 				require: [ 'ngModel', '^?vormField', '^?vormForm' ],
 				link: function ( scope, element, attrs, controllers ) {
 					
-					var [ ngModel, vormField, vorm ] = controllers;
+					let [ ngModel, vormField, vorm ] = controllers;
 					
 					if(vormField || vorm) {
 						

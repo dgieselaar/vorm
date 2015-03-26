@@ -6,7 +6,7 @@
 			
 			return function ( name ) {
 				
-				var delegate = {};
+				const delegate = {};
 				
 				delegate.value = undefined;
 				

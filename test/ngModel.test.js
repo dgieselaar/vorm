@@ -107,5 +107,20 @@ describe('vorm', function() {
 		});
 		
 	});
+
+	describe('when told to ignore', function ( ) {
+		
+		it('should not create a vorm-field controller', function ( ) {
+			
+			var element = angular.element(`<input type="text" ng-model="foo" vorm-field-ignore/>`);
+			
+			$compile(element)($rootScope.$new());
+			element.scope().$digest();
+			
+			expect(element.controller('vormField')).toBeUndefined();
+			
+		});
+		
+	});
   
 });

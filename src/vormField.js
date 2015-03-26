@@ -9,15 +9,16 @@
 				require: [ 'vormField', '^?vormForm' ],
 				controller: [ '$scope', '$element', '$attrs', function ( $scope, $element, $attrs ) {
 					
-					var name = $scope.$eval($attrs.vormField) || $attrs.ngModel;
+					const name = $scope.$eval($attrs.vormField) || $attrs.ngModel,
+						ctrl = this;
 					
-					angular.extend(this, new VormFieldCtrl(name, $element[0]));
+					angular.extend(ctrl, new VormFieldCtrl(name, $element[0]));
 					
 				}],
 				controllerAs: 'vormField',
 				link: function ( scope, element, attrs, controllers ) {
 					
-					var [ vormField, vorm ] = controllers;
+					const [ vormField, vorm ] = controllers;
 					
 					if(vorm) {
 						vorm.addField(vormField);

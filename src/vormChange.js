@@ -7,14 +7,12 @@
 			return {
 				link: function ( scope, element, attrs ) {
 					
-					var cb;
-					
-					cb = $parse(attrs.vormChange);
+					const cb = $parse(attrs.vormChange);
 					
 					function handleChange ( event, name ) {
 						cb(scope, {
 							$event: event,
-							$name: name
+							$name: event.detail ? event.detail.name : name
 						});
 					}
 					

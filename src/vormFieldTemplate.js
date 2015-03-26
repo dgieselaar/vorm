@@ -2,20 +2,35 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.directive('vormFieldTemplate', [ 'vormTemplateService', 'VormValueType', function ( vormTemplateService, VormValueType ) {
+		.directive('vormFieldTemplate', [ 'vormTemplateService', 'VormValueType', 'VormModelListCtrl', function ( vormTemplateService, VormValueType, VormModelListCtrl ) {
+			
+			var el = angular.element(`
+				<ul class="vorm-input-list">
+					<li class="vorm-input-list-item" ng-repeat="model in vormFieldTemplate.getDelegates()">
+						<vorm-input model="model" compiler="vormFieldTemplate.getModelCompiler()" data="vormFieldTemplate.getInputData()"></vorm-input>
+					</li>
+				</ul>
+			`);
 			
 			return {
 				restrict: 'E',
-				require: [ 'vormFieldTemplate', 'vormField', 'vormModelList' ],
-				template: vormTemplateService.getDefaultTemplate(),
+				require: [ 'vormFieldTemplate', 'vormField' ],
+				template: function ( ) {
+					var element = angular.element(vormTemplateService.getDefaultTemplate());
+					
+					angular.element(element[0].querySelectorAll('[ng-transclude], ng-transclude')).replaceWith(el);
+					
+					return element[0].outerHTML;
+				},
 				replace: true,
 				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
 					
-					var ctrl = this,
-						config = $scope.$eval($attrs.config) || {},
+					const ctrl = this;
+
+					let config = $scope.$eval($attrs.config) || {},
 						compiler,
 						vormField,
-						vormModelList;
+						vormModelList = new VormModelListCtrl();
 					
 					config = _.defaults(angular.copy(config), { 
 						name: $attrs.name,
@@ -32,13 +47,14 @@
 					
 					ctrl.link = function ( controllers ) {
 						vormField = controllers[0];
-						vormModelList = controllers[1];
 						
 						vormField.setName(config.name);
 						
 						if(config.limit > 1) {
 							vormField.setValueType(VormValueType.LIST);
 						}
+						
+						vormField.setRequired(config.required || false);
 						
 						vormModelList.addDelegate();
 					};
@@ -55,9 +71,14 @@
 						return config.data;	
 					};
 					
+					ctrl.getDelegates = vormModelList.getDelegates;
+					ctrl.addDelegate = vormModelList.createDelegate;
+					ctrl.clearDelegate = vormModelList.clearDelegate;
+					
 				}],
 				controllerAs: 'vormFieldTemplate',
 				link: function ( scope, element, attrs, controllers ) {
+					
 					controllers[0].link(controllers.slice(1));
 				}
 			};

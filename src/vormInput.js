@@ -5,26 +5,34 @@
 		.directive('vormInput', [ function ( ) { 
 			
 			return {
-				require: [ '^?vormFieldTemplate' ],
+				require: [ 'vormInput', '^vormField' ],
 				scope: {
-					'modelDelegate': '&',
-					'config': '&',
-					'type': '&'
+					compiler: '&',
+					model: '=',
+					data: '&'
 				},
+				controller: [ function ( ) {
+					
+					var ctrl = this,
+						vormField;
+					
+					ctrl.link = function ( controllers ) {
+						vormField = controllers[0];
+					};
+					
+					ctrl.isRequired = function ( ) {
+						return vormField && vormField.isRequired();	
+					};
+					
+				}],
 				controllerAs: 'vormInput',
-				link: function ( scope, element, attrs, controllers, transclude ) {
+				link: function ( scope, element, attrs, controllers ) {
 					
-					var [ vormFieldTemplate ] = controllers;
+					controllers[0].link(controllers.slice(1));
 					
-					if(vormFieldTemplate) {
-						element.replaceWith(vormFieldTemplate.getModelCompiler()(scope));
-					} else if(transclude) {
-						transclude(function(clone) {
-						  	element.replaceWith(clone);
-						});
-					} else {
-						throw new Error('vormInput needs either a transclude function or vormFieldGenerator.');
-					}
+					scope.compiler()(scope, function ( clonedElement ) {
+						element.replaceWith(clonedElement);
+					});
 				}
 			};
 			

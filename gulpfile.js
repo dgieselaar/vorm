@@ -44,9 +44,13 @@ function js ( ) {
 	return stream;
 }
 
+function build ( ) {
+	return runSequence('js', 'helper');
+}
+
 gulp.task('default', function ( callback ) {
 	
-	gulp.watch('src/**/*.js', js);
+	gulp.watch('src/**/*.js', build);
 	
 	karma.server.start({
 		configFile: __dirname + '/karma.conf.js',
@@ -65,20 +69,12 @@ gulp.task('helper', function ( ) {
 		.pipe(concat('vorm.js', { newLine: ''}))
 		.pipe(header('"use strict";'))
 		.pipe(gulp.dest('.'));
-		
-	stream.on('end', function ( ) {
-		fs.unlinkSync('./helpers.js');
-	});
 	
 	return stream;
 	
 })
 
-gulp.task('build', function ( ) {
-	
-	runSequence('js', 'helper');
-	
-});
+gulp.task('build', build);
 
 gulp.task('test', function ( callback ) {
 	

@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+	<head>
+		<title></title>
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script> -->
+		<script src="../../node_modules/angular/angular.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+		<script src="../../vorm.js"></script>
+		
+		<script>
+			angular.module('app', [ 'vorm' ])
+				.controller('FormController', [ '$scope', function ( $scope ) {
+					
+					var ctrl = this,
+						fields;
+						
+					fields = [
+						{
+							name: 'first_name',
+							type: 'text',
+							label: 'First name',
+							required: true
+						},
+						{
+							name: 'last_name',
+							type: 'text',
+							label: 'Last name'
+						}
+					]
+					
+					ctrl.getFields = function ( ) {
+						return fields;  
+					};
+					
+					ctrl.handleSubmit = function ( values ) {
+						console.log('submitted with', values);	
+					};
+					
+					ctrl.handleChange = function ( ) {
+						console.log('change', arguments);	
+					};
+					
+				}]);
+		</script>
+		
+	</head>
+	<body ng-app="app">
+	
+		<form vorm-form vorm-submit="ctrl.handleSubmit($values)" vorm-change="ctrl.handleChange($name)" ng-controller="FormController as ctrl">
+			
+			<vorm-fieldset fields="ctrl.getFields()">
+			</vorm-fieldset>
+			
+			<button ng-disabled="!vormForm.isValid()">
+				Submit
+			</button>
+		</form>
+		
+	</body>
+</html>
