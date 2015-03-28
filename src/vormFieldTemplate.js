@@ -5,11 +5,12 @@
 		.directive('vormFieldTemplate', [ 'vormTemplateService', 'VormValueType', 'VormModelListCtrl', function ( vormTemplateService, VormValueType, VormModelListCtrl ) {
 			
 			var el = angular.element(`
-				<ul class="vorm-input-list">
-					<li class="vorm-input-list-item" ng-repeat="model in vormFieldTemplate.getDelegates()">
-						<vorm-input model="model" compiler="vormFieldTemplate.getModelCompiler()" data="vormFieldTemplate.getInputData()"></vorm-input>
-					</li>
-				</ul>
+				<div class="vorm-input-list">
+					<div class="vorm-input-list-item" ng-repeat="delegate in vormFieldTemplate.getDelegates()">
+						<vorm-input delegate="delegate" compiler="vormFieldTemplate.getModelCompiler()" data="vormFieldTemplate.getInputData()"></vorm-input>
+						<button type="button" ng-click="vormFieldTemplate.clearDelegate(delegate)" ng-show="vormField.getValueType()==='multiple'">x</button>
+					</div>
+				</div>
 			`);
 			
 			return {
@@ -25,18 +26,20 @@
 				replace: true,
 				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
 					
-					const ctrl = this;
+					const ctrl = this,
+						vormModelList = new VormModelListCtrl(),
+						inputs = [];
 
 					let config = $scope.$eval($attrs.config) || {},
 						compiler,
-						vormField,
-						vormModelList = new VormModelListCtrl();
+						vormField;
 					
 					config = _.defaults(angular.copy(config), { 
 						name: $attrs.name,
 						type: $attrs.type,
 						label: $attrs.label,
-						template: $scope.$eval($attrs.label)
+						template: $scope.$eval($attrs.template),
+						data: $scope.$eval($attrs.data)
 					});
 					
 					if(!config.name || !config.type) {
@@ -71,8 +74,32 @@
 						return config.data;	
 					};
 					
+					ctrl.addInput = function ( input ) {
+						inputs.push(input);
+					};
+					
+					ctrl.removeInput = function ( input ) {
+						_.pull(inputs, input);	
+					};
+					
+					ctrl.getInputs = function ( ) {
+						return inputs;	
+					};
+					
+					
+					ctrl.getLastInputId = function ( ) {
+						var input = _.last(inputs),
+							inputId;
+							
+						if(input) {
+							inputId = input.getInputId();
+						}
+						
+						return inputId;
+					};
+					
 					ctrl.getDelegates = vormModelList.getDelegates;
-					ctrl.addDelegate = vormModelList.createDelegate;
+					ctrl.addDelegate = vormModelList.addDelegate;
 					ctrl.clearDelegate = vormModelList.clearDelegate;
 					
 				}],

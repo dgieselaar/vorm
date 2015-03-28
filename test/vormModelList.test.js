@@ -1,20 +1,29 @@
-/*global describe,beforeEach,module,inject,it,angular,expect*/
+/*global describe,beforeEach,module,inject,it,angular,expect,spyOn*/
 describe('vormModelList', function ( ) {
 	
-	var vormModelListCtrl;
+	var element,
+		scope,
+		vormModelListCtrl;
 	
 	beforeEach(module('vorm'));
 	
 	beforeEach(inject([ '$rootScope', '$compile', function ( ) {
 		
-		var [ $rootScope, $compile ] = arguments,
-			el;
+		var [ $rootScope, $compile ] = arguments;
 			
-		el = angular.element(`<div vorm-model-list></div>`);
+		element = angular.element(`
+			<div vorm-model-list>
+				<div ng-repeat="model in vormModelList.getDelegates()">
+					<input type="text" ng-model="model.value"/>
+				</div>
+			</div>
+		`);
 		
-		$compile(el)($rootScope.$new());
+		scope = $rootScope.$new();
 		
-		vormModelListCtrl = el.inheritedData('$vormModelListController');
+		$compile(element)(scope);
+		
+		vormModelListCtrl = element.controller('vormModelList');
 		
 	}]));
 	
@@ -55,9 +64,11 @@ describe('vormModelList', function ( ) {
 		delegate = vormModelListCtrl.getDelegates()[0];
 		delegate.value = 'foo';
 		
+		spyOn(delegate, 'clearValue');
+		
 		vormModelListCtrl.clearDelegate(delegate);
 		
-		expect(delegate.value).toBeUndefined();
+		expect(delegate.clearValue).toHaveBeenCalled();
 		
 	});
 	

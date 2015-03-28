@@ -6,8 +6,10 @@
 			return {
 				restrict: 'E',
 				template: `
-					<vorm-field-template config="field" ng-repeat="field in vormFieldset.getFields()">
-					</vorm-field-template>
+					<fieldset>
+						<vorm-field-template config="field" ng-repeat="field in vormFieldset.getFields()">
+						</vorm-field-template>
+					</fieldset>
 				`,
 				scope: {
 					fields: '&'

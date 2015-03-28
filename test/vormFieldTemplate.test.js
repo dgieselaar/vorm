@@ -7,7 +7,8 @@ describe('vormFieldTemplate', function ( ) {
 		tpl,
 		scope,
 		vormFormCtrl,
-		vormFieldCtrl;
+		vormFieldCtrl,
+		vormFieldTemplateCtrl;
 				
 	beforeEach(module('vorm'));
 	
@@ -22,6 +23,8 @@ describe('vormFieldTemplate', function ( ) {
 			</form>
 		`);
 		
+		const tplEl = form.children().eq(0);
+		
 		scope.config = config;
 		
 		$compile(form)(scope);
@@ -34,6 +37,8 @@ describe('vormFieldTemplate', function ( ) {
 		
 		vormFormCtrl = form.controller('vormForm');
 		vormFieldCtrl = vormFormCtrl.getFields()[0];
+		
+		vormFieldTemplateCtrl = form.children().eq(0).controller('vormFieldTemplate');
 	}
 	
 	beforeEach(inject([ '$rootScope', '$compile', function ( ) {
@@ -112,6 +117,46 @@ describe('vormFieldTemplate', function ( ) {
 		});
 		
 		expect(form.find('input').scope().data()).toEqual(data);
+		
+	});
+	
+	it('should add an input to its list', function ( ) {
+		
+		compileWith({
+			name: 'test',
+			type: 'text',
+			limit: 3
+		});
+		
+		spyOn(vormFieldTemplateCtrl, 'addInput').and.callThrough();
+		
+		vormFieldTemplateCtrl.addDelegate();
+		
+		scope.$digest();
+		
+		expect(vormFieldTemplateCtrl.addInput).toHaveBeenCalled();
+		
+	});
+	
+	it('should remove an input from its list', function ( ) {
+		
+		compileWith({
+			name: 'test',
+			type: 'text',
+			limit: 3
+		});
+		
+		spyOn(vormFieldTemplateCtrl, 'removeInput').and.callThrough();
+		
+		vormFieldTemplateCtrl.addDelegate();
+		
+		scope.$digest();
+		
+		vormFieldTemplateCtrl.clearDelegate(vormFieldTemplateCtrl.getDelegates()[0]);
+		
+		scope.$digest();
+		
+		expect(vormFieldTemplateCtrl.removeInput).toHaveBeenCalled();
 		
 	});
 	

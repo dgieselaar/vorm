@@ -86,4 +86,149 @@ describe('vormInput', function ( ) {
 		
 	});
 	
+	describe('when compiled', function ( ) {
+		
+		let element,
+			scope,
+			delegate,
+			vormFormCtrl,
+			vormFieldCtrl;
+		
+		function compile ( options ) {
+			element = angular.element(`
+				<form vorm-form>
+					<vorm-field-template name="foo" type="text" data="data"></vorm-field-template>
+				</form>
+			`);
+			
+			options = options || {};
+			
+			if(options.version) {
+				angular.version.minor = options.version;
+			}
+			
+			if(options.form === false) {
+				element.removeAttr('vorm-form');
+			}
+			
+			scope = $rootScope.$new();
+			scope.data = {
+				options: [ '$values', function ( $values ) {
+					return [
+						{
+							name: 'foo',
+							label: 'Foo'
+						},
+						{
+							name: 'bar',
+							label: 'Bar'
+						}
+					];
+				}]
+			}
+			
+			$compile(element)(scope);
+			
+			scope.$digest();
+			
+			vormFormCtrl = element.controller('vormForm');
+			vormFieldCtrl = element.children().eq(0).controller('vormField');
+			
+			delegate = element.children().eq(0).controller('vormFieldTemplate').getDelegates()[0];
+		}
+		
+		it('should pass the model to the delegate', function ( ) {
+			
+			compile();
+			
+			expect(delegate.getNgModel()).toBeDefined();
+			
+		});
+		
+		it('should clear the view value if delegate.clearValue is called', function ( ) {
+			
+			compile();
+			
+			delegate.clearValue();
+			
+			scope.$digest();
+			
+			expect(vormFieldCtrl.getValue()).toBeUndefined();
+			
+		});
+		
+		it('should return a new list of options only if changed for <=1.3.x', function ( ) {
+			
+			compile({
+				version: 3
+			});
+			
+			const templateCtrl = element.children().eq(0).controller('vormFieldTemplate');
+			const inputCtrl = templateCtrl.getInputs()[0];
+			
+			const opts = inputCtrl.getOptions();
+			
+			expect(inputCtrl.getOptions()).toBe(opts);
+			
+		});
+		
+		it('should always return a new list of options for >=1.4.x', function ( ) {
+			
+			compile({
+				version: 4
+			});
+			
+			const templateCtrl = element.children().eq(0).controller('vormFieldTemplate');
+			const inputCtrl = templateCtrl.getInputs()[0];
+			
+			const opts = inputCtrl.getOptions();
+			
+			expect(inputCtrl.getOptions()).not.toBe(opts);
+			
+			expect(inputCtrl.getOptions()).toEqual(opts);
+			
+		});
+		
+		it('should invoke a function with the values from the form', function ( ) {
+			
+			compile();
+			
+			const templateCtrl = element.children().eq(0).controller('vormFieldTemplate');
+			const inputCtrl = templateCtrl.getInputs()[0];
+			const spy = jasmine.createSpy();
+			
+			scope.data.options[1] = spy;
+			
+			inputCtrl.getOptions();
+			
+			expect(spy).toHaveBeenCalledWith(vormFormCtrl.getValues());
+			
+		});
+		
+		it('should invoke a function with the values from the field if no form is present', function ( ) {
+			
+			compile({
+				form: false
+			});
+			
+			const templateCtrl = element.children().eq(0).controller('vormFieldTemplate');
+			const inputCtrl = templateCtrl.getInputs()[0];
+			const spy = jasmine.createSpy();
+			
+			scope.data.options[1] = spy;
+			
+			inputCtrl.getOptions();
+			
+			const value = {};
+			
+			value[vormFieldCtrl.getName()] = vormFieldCtrl.getValue();
+			
+			expect(spy).toHaveBeenCalledWith(value);
+			
+		});
+		
+	});
+	
+	
+	
 });

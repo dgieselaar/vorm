@@ -2,7 +2,7 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.factory('VormModelListCtrl', [ 'ModelDelegate', function ( ModelDelegate) {
+		.factory('VormModelListCtrl', [ 'VormModelDelegate', function ( VormModelDelegate) {
 			
 			return function ( ) {
 				
@@ -15,7 +15,7 @@
 				
 				ctrl.clearDelegate = function ( delegate ) {
 					if(delegates.length === 1) {
-						delegate.value = undefined;
+						delegate.clearValue();
 					} else {
 						_.pull(delegates, delegate);
 					}
@@ -28,7 +28,7 @@
 						name = delegates.length.toString();
 					}
 					
-					delegate = new ModelDelegate(name);
+					delegate = new VormModelDelegate(name);
 					delegates.push(delegate);
 				};
 				

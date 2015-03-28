@@ -5,7 +5,7 @@
 		.directive('ngModel', [ 'VormFieldCtrl', function ( VormFieldCtrl ) {
 			
 			return {
-				require: [ 'ngModel', '^?vormField', '^?vormForm' ],
+				require: [ 'ngModel', '^?vormField', '^?vormForm', '^?vormInput' ],
 				link: function ( scope, element, attrs, controllers ) {
 					
 					let [ ngModel, vormField, vorm ] = controllers;

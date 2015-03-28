@@ -4,7 +4,7 @@
   "description": "Write your forms in JSON and HTML, use the same API.",
   "main": "dist/vorm.js",
   "scripts": {
-    "test": "test"
+    "test": "./node_modules/.bin/gulp test"
   },
   "repository": {
     "type": "git",
@@ -42,7 +42,6 @@
     "gulp-remember": "^0.3.0",
     "gulp-sourcemaps": "^1.5.0",
     "gulp-uglify": "^1.1.0",
-    "jasmine-core": "^2.2.0",
     "karma": "^0.12.31",
     "karma-babel-preprocessor": "^4.0.0",
     "karma-coverage": "^0.2.7",
