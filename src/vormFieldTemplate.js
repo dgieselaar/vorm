@@ -2,26 +2,18 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.directive('vormFieldTemplate', [ 'vormTemplateService', 'VormValueType', 'VormModelListCtrl', function ( vormTemplateService, VormValueType, VormModelListCtrl ) {
-			
-			var el = angular.element(`
-				<div class="vorm-input-list">
-					<div class="vorm-input-list-item" ng-repeat="delegate in vormFieldTemplate.getDelegates()">
-						<vorm-input delegate="delegate" compiler="vormFieldTemplate.getModelCompiler()" data="vormFieldTemplate.getInputData()"></vorm-input>
-						<button type="button" ng-click="vormFieldTemplate.clearDelegate(delegate)" ng-show="vormField.getValueType()==='multiple'">x</button>
-					</div>
-				</div>
-			`);
+		.directive('vormFieldTemplate', [ 'vormTemplateService', 'VormValueType', 'VormModelListCtrl', 'vormInvoke', function ( vormTemplateService, VormValueType, VormModelListCtrl, vormInvoke ) {
 			
 			return {
 				restrict: 'E',
-				require: [ 'vormFieldTemplate', 'vormField' ],
+				require: [ 'vormFieldTemplate', 'vormField', '^?vormForm' ],
 				template: function ( ) {
-					var element = angular.element(vormTemplateService.getDefaultTemplate());
+					var wrapperEl = angular.element(vormTemplateService.getDefaultWrapper()),
+						templateEl = angular.element(vormTemplateService.getDefaultTemplate());
 					
-					angular.element(element[0].querySelectorAll('[ng-transclude], ng-transclude')).replaceWith(el);
+					angular.element(wrapperEl[0].querySelectorAll('[ng-transclude], ng-transclude')).replaceWith(templateEl);
 					
-					return element[0].outerHTML;
+					return wrapperEl[0].outerHTML;
 				},
 				replace: true,
 				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
@@ -32,14 +24,16 @@
 
 					let config = $scope.$eval($attrs.config) || {},
 						compiler,
-						vormField;
+						vormField,
+						vormForm;
 					
 					config = _.defaults(angular.copy(config), { 
 						name: $attrs.name,
 						type: $attrs.type,
 						label: $attrs.label,
 						template: $scope.$eval($attrs.template),
-						data: $scope.$eval($attrs.data)
+						required: $scope.$eval($attrs.required),
+						data: $scope.$eval($attrs.data) || {}
 					});
 					
 					if(!config.name || !config.type) {
@@ -50,6 +44,7 @@
 					
 					ctrl.link = function ( controllers ) {
 						vormField = controllers[0];
+						vormForm = controllers[1];
 						
 						vormField.setName(config.name);
 						
@@ -74,6 +69,21 @@
 						return config.data;	
 					};
 					
+					ctrl.getInvokedData = function ( key ) {
+						let values;
+						
+						if(vormForm) {
+							values = vormForm.getValues();
+						} else {
+							values = {};
+							values[vormField.getName()] = vormField.getValue();
+						}
+						
+						return vormInvoke(ctrl.getInputData()[key], {
+							$values: values
+						});
+					};
+					
 					ctrl.addInput = function ( input ) {
 						inputs.push(input);
 					};
@@ -85,7 +95,6 @@
 					ctrl.getInputs = function ( ) {
 						return inputs;	
 					};
-					
 					
 					ctrl.getLastInputId = function ( ) {
 						var input = _.last(inputs),

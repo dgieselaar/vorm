@@ -20,49 +20,21 @@
 		.controller('FormController', [ function ( ) {
 			
 			var ctrl = this,
-				fields;
+				selectData = {
+					options: [
+						{
+							value: 'male',
+							label: 'Male'
+						},
+						{
+							value: 'female',
+							label: 'Female'
+						}
+					],
+					notSelectedLabel: 'Unspecified'
+				};
 				
-			fields = [
-				{
-					name: 'first_name',
-					type: 'text',
-					label: 'First name',
-					required: true
-				},
-				{
-					name: 'last_name',
-					type: 'text',
-					label: 'Last name',
-					required: true
-				},
-				{
-					name: 'age',
-					type: 'number',
-					label: 'Age'
-				},
-				{
-					name: 'gender',
-					type: 'select',
-					label: 'Gender',
-					data: {
-						options: [
-							{
-								label: 'Male',
-								value: 'male'
-							},
-							{
-								label: 'Female',
-								value: 'female'
-							}
-						],
-						notSelectedLabel: 'Unspecified'
-					}
-				}
-			]
-			
-			ctrl.getFields = function ( ) {
-				return fields;  
-			};
+			ctrl.values = {};
 			
 			ctrl.handleSubmit = function ( values ) {
 				console.log('submitted with', values);	
@@ -70,6 +42,10 @@
 			
 			ctrl.handleChange = function ( ) {
 				console.log('change', arguments);
+			};
+			
+			ctrl.getSelectData = function ( ) {
+				return selectData;	
 			};
 			
 		}])
@@ -84,7 +60,6 @@
 </script>
 		
 		<style>
-		
 			.vorm-field-label {
 				padding: 4px 0;
 			}
@@ -108,8 +83,13 @@
 		ng-controller="FormController as ctrl"
 		>
 		
-		<vorm-fieldset class="form-group" fields="ctrl.getFields()">
-		</vorm-fieldset>
+		<fieldset class="form-group">
+			<vorm-field-template name="first_name" type="text" required="true" label="First name"></vorm-field-template>
+			<vorm-field-template name="last_name" type="text" required="true" label="Last name"></vorm-field-template>
+			<vorm-field-template name="age" type="number" label="Age"></vorm-field-template>
+			<vorm-field-template name="gender" type="select" data="ctrl.getSelectData()" label="Gender"></vorm-field-template>
+			
+		</fieldset>
 		
 		<button class="btn btn-primary" ng-disabled="!vormForm.isValid()" type"submit">
 			Submit

@@ -2,27 +2,23 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.directive('vormInput', [ 'vormInvoke', function ( vormInvoke ) { 
+		.directive('vormInput', [ function ( ) { 
 			
 			return {
-				require: [ 'vormInput', '^vormField', '^vormFieldTemplate', '^?vormForm' ],
-				scope: {
-					compiler: '&',
-					delegate: '=',
-					data: '&'
-				},
+				require: [ 'vormInput', '^vormField', '^vormFieldTemplate' ],
 				controller: [ '$scope', function ( $scope ) {
 					
 					var ctrl = this,
 						vormField,
 						vormFieldTemplate,
-						vormForm,
 						inputId = Math.random().toString(36).slice(2);
 					
 					ctrl.link = function ( controllers ) {
 						vormField = controllers[0];
 						vormFieldTemplate = controllers[1];
-						vormForm = controllers[2];
+						
+						ctrl.getInvokedData = vormFieldTemplate.getInvokedData;
+						ctrl.getData = vormFieldTemplate.getInputData;
 						
 						vormFieldTemplate.addInput(ctrl);
 					};
@@ -58,23 +54,6 @@
 						})();
 					}
 					
-					ctrl.getInvokedData = function ( key ) {
-						let values;
-						
-						if(vormForm) {
-							values = vormForm.getValues();
-						} else {
-							values = {};
-							values[vormField.getName()] = vormField.getValue();
-						}
-						
-						return vormInvoke(ctrl.getData()[key], {
-							$values: values
-						});
-					};
-					
-					ctrl.getData = $scope.data;
-					
 					$scope.$on('$destroy', function ( ) {
 						vormFieldTemplate.removeInput(ctrl);
 					});
@@ -85,12 +64,11 @@
 					
 					controllers[0].link(controllers.slice(1));
 					
-					scope.compiler()(scope, function ( clonedElement ) {
+					scope.$eval(attrs.compiler)(scope, function ( clonedElement ) {
 						element.replaceWith(clonedElement);
-						clonedElement.attr('id', controllers[0].getInputId());
 						
 						scope.$$postDigest(function ( ) {
-							scope.delegate.setNgModel(clonedElement.controller('ngModel'));
+							scope.$eval(attrs.delegate).setNgModel(clonedElement.controller('ngModel'));
 						});
 					});
 				}

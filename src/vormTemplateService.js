@@ -5,7 +5,7 @@
 		.provider('vormTemplateService', [ function ( ) {
 			
 			let defaultWrapper,
-				wrapper,
+				defaultTemplate,
 				modelCompilers,
 				modelTemplates = {};
 				
@@ -30,9 +30,18 @@
 				</div>
 			`;
 			
-			modelTemplates.text = `<input type="text" placeholder="{{vormInput.getData().placeholder}}"/>`;
-			modelTemplates.number = `<input type="number"/>`;
-			modelTemplates.select = `<select ng-options="option.value as option.label for option in vormInput.getOptions()"><option value="" data-ng-show="vormInput.getInvokedData('notSelectedLabel')">{{vormInput.getInvokedData('notSelectedLabel')}}</option></select>`;
+			defaultTemplate = `
+				<div class="vorm-input-list">
+					<div class="vorm-input-list-item" ng-repeat="delegate in vormFieldTemplate.getDelegates()">
+						<vorm-input delegate="delegate" compiler="vormFieldTemplate.getModelCompiler()" data="vormFieldTemplate.getInputData()"></vorm-input>
+						<button type="button" ng-click="vormFieldTemplate.clearDelegate(delegate)" ng-show="vormField.getValueType()==='multiple'">x</button>
+					</div>
+				</div>
+			`;
+			
+			modelTemplates.text = `<input type="text" placeholder="{{vormInput.getData().placeholder}}" id="{{::vormInput.getInputId()}}"/>`;
+			modelTemplates.number = `<input type="number" id="{{::vormInput.getInputId()}}"/>`;
+			modelTemplates.select = `<select id="{{::vormInput.getInputId()}}" ng-options="option.value as option.label for option in vormInput.getOptions()"><option value="" data-ng-show="vormInput.getInvokedData('notSelectedLabel')">{{vormInput.getInvokedData('notSelectedLabel')}}</option></select>`;
 			
 			modelTemplates = _.mapValues(modelTemplates, function ( template ) {
 				return angular.element(template);
@@ -41,8 +50,12 @@
 			return {
 				$get: [ '$compile', function ( $compile ) {
 					
-					vormTemplateService.getDefaultTemplate = function ( ) {
+					vormTemplateService.getDefaultWrapper = function ( ) {
 						return defaultWrapper;	
+					};
+					
+					vormTemplateService.getDefaultTemplate = function ( ) {
+						return defaultTemplate;	
 					};
 					
 					vormTemplateService.getModelCompiler = function ( type, template ) {
@@ -64,8 +77,29 @@
 					
 					
 					modelCompilers = _.mapValues(modelTemplates, function ( el ) {
-						el.attr('ng-model', 'model.value');
-						el.attr('ng-required', 'vormInput.isRequired()');
+						let modelEl;
+						
+						_.some(el, function ( element ) {
+							
+							let childEl;
+							
+							if(element.hasAttribute('ng-model')) {
+								modelEl = angular.element(element);
+							} else if((childEl = element.querySelector('[ng-model]'))) {
+								modelEl = angular.element(childEl);
+							}
+							
+							return !!modelEl;
+							
+						});
+							
+						if(!modelEl) {
+							modelEl = el;
+						}
+					
+						modelEl.attr('ng-model', 'model.value');
+						modelEl.attr('ng-required', 'vormInput.isRequired()');
+						
 						return $compile(el);
 					});
 					
@@ -76,6 +110,17 @@
 					modelTemplates = _.mapValues(modelTemplates, function ( template, type ) {
 						return processor(template, type);
 					});
+				},
+				modifyDefaultWrapper: function ( processor ) {
+					const processedEl = processor(angular.element(defaultWrapper));
+					processedEl.attr('vorm-field', '');
+					defaultWrapper = processedEl[0].outerHTML;
+				},
+				modifyDefaultTemplate: function ( processor ) {
+					const processedEl = processor(angular.element(defaultTemplate));
+					let el = angular.element('<p></p>');
+					el.append(processedEl);
+					defaultTemplate = el[0].innerHTML;
 				}
 			};
 			

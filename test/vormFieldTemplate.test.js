@@ -116,7 +116,7 @@ describe('vormFieldTemplate', function ( ) {
 			data: data
 		});
 		
-		expect(form.find('input').scope().data()).toEqual(data);
+		expect(vormFieldTemplateCtrl.getInputData()).toEqual(data);
 		
 	});
 	

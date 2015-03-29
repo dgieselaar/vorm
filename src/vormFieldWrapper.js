@@ -7,7 +7,7 @@
 				restrict: 'EA',
 				transclude: true,
 				replace: true,
-				template: vormTemplateService.getDefaultTemplate()
+				template: vormTemplateService.getDefaultWrapper()
 			}
 			
 		}]);
