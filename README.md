@@ -30,5 +30,10 @@ You can add any number of controls, of any type, to a `vorm-field`, and it will 
 
 ## How do I get started?
 
-For now, check out the examples, read the source code, or [ping me on Twitter](https://twitter.com/plestik).
+For now, read the source code, [ping me on Twitter](https://twitter.com/plestik), or check out the examples:
+* [01 - Generate a simple form with JSON](http://plestik.github.io/vorm/examples/01/)
+* [02 - Generate a simple form with HTML](http://plestik.github.io/vorm/examples/02/)
+* [03 - Using a custom theme (in this case, Angular Material)](http://plestik.github.io/vorm/examples/03/)
+
+More to come!
 
