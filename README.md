@@ -1,7 +1,6 @@
 ![Tests passing](https://travis-ci.org/plestik/vorm.svg?branch=master)
-
 # vorm
-Write your Angular forms in JSON and HTML, use the same API
+Write your Angular forms in JSON and HTML, use the same API.
 
 ## What does vorm do?
 
@@ -36,4 +35,9 @@ For now, read the source code, [ping me on Twitter](https://twitter.com/plestik)
 * [03 - Using a custom theme (in this case, Angular Material)](http://plestik.github.io/vorm/examples/03/)
 
 More to come!
+
+Things to do before the first release:
+- [ ] Support all basic input types
+- [ ] Make sure `vorm-field-wrapper` works with `compile` & `.replaceWith` instead of transclusion
+- [ ] Write up examples for value types `list` and `object`
 
