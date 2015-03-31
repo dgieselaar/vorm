@@ -10,18 +10,18 @@ Vorm is an Angular module for generating (via JSON/HTML) and decorating (HTML) f
 
 Vorm has two features which as far as I can tell set it apart: 
 
-##### 1. Use both JSON and HTML for generating or decorating your forms
+#### 1. Use both JSON and HTML for generating or decorating your forms
 
 There are three ways to create a form:
 - Using the `vorm-fieldset` directive and passing it an array of field configuration objects.
 - Using the `vorm-fieldset-template` directive and specifying a name, type and label (and other optional attributes).
 - Using the `vorm-field-wrapper` directive to decorate existing controls. The directive will unpack its contents and wrap it with the default wrapper template.
 
-##### 2. Multiple controls per field are supported out of the box
+#### 2. Multiple controls per field are supported out of the box
 
 You can add any number of controls, of any type, to a `vorm-field`, and it will resolve the values for you in a smart way. It makes two things easy: nested (mini-)forms and lists of controls. The latter is especially helpful if the user needs to provide a list for a certain property instead of just one value (for instance, a list of airports the user wishes to travel from). This is the main reason this library exists.
 
-###### Some other features
+## What else does it do?
 * Customize/override wrap and control templates
 * Dynamic data for controls via _invokables_ (primitives, booleans or (annotated) functions)
 * Various HTML form controls supported by default (`input`, `select`, `textarea` and all their variations)
@@ -36,7 +36,7 @@ For now, read the source code, [ping me on Twitter](https://twitter.com/plestik)
 
 More to come!
 
-Things to do before the first release:
+### Things to do before the first release:
 - [ ] Support all basic input types
 - [ ] Make sure `vorm-field-wrapper` works with `compile` & `.replaceWith` instead of transclusion
 - [ ] Write up examples for value types `list` and `object`
