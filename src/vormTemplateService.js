@@ -4,58 +4,72 @@
 	angular.module('vorm')
 		.provider('vormTemplateService', [ function ( ) {
 			
-			let defaultWrapper,
-				defaultTemplate,
+			let wrapperTemplate,
+				controlTemplate,
 				modelCompilers,
 				modelTemplates = {};
 				
 			const vormTemplateService = {};
+			
+			wrapperTemplate = '' + 
+				'<div ng-class="vormField.getClassObj()">' + 
+					'<vorm-label></vorm-label>' + 
+					'<vorm-control></vorm-control>' +
+				'</div>';
 				
-			defaultWrapper = `
-				<div class="vorm-field"
-					ng-class="vormField.getClassObj()"
-					vorm-field
-				>
-					<label class="vorm-field-label" for="{{vormFieldTemplate.getLastInputId()}}">
-						{{vormFieldTemplate.getLabel()}}
-					</label>
-					
-					<div class="vorm-input" ng-transclude>
-						
-					</div>
-					
-					<div class="vorm-field-status">
-						
-					</div>
-				</div>
-			`;
-			
-			defaultTemplate = `
-				<div class="vorm-input-list">
-					<div class="vorm-input-list-item" ng-repeat="delegate in vormFieldTemplate.getDelegates()">
-						<vorm-input delegate="delegate" compiler="vormFieldTemplate.getModelCompiler()" data="vormFieldTemplate.getInputData()"></vorm-input>
-						<button type="button" ng-click="vormFieldTemplate.clearDelegate(delegate)" ng-show="vormField.getValueType()==='multiple'">x</button>
-					</div>
-				</div>
-			`;
-			
-			modelTemplates.text = `<input type="text" placeholder="{{vormInput.getData().placeholder}}" id="{{::vormInput.getInputId()}}"/>`;
-			modelTemplates.number = `<input type="number" id="{{::vormInput.getInputId()}}"/>`;
+			controlTemplate = '<div class="vorm-control-list">' +
+				'<div class="vorm-control-list-item" ng-repeat="delegate in vormFieldTemplate.getDelegates()">' + 
+					'<vorm-input delegate="delegate" compiler="vormFieldTemplate.getModelCompiler()" data="vormFieldTemplate.getInputData()"></vorm-input>' +
+					'<button type="button" ng-click="vormFieldTemplate.clearDelegate(delegate)" ng-show="vormField.getValueType()===\'multiple\'">x</button>' + 
+				'</div>' + 
+			'</div>';
+				
+			modelTemplates = _(modelTemplates)
+				.assign(
+					_('date datetime datetime-local email month number password search tel text time url week checkbox'.split(' '))
+						.zipObject()
+						.mapValues(function ( value, key ) {
+							var placeholder = _.includes('text search tel url email number password'.split(' '), key) ?
+								`placeholder="{{vormInput.invoke('placeholder')}}"`
+								: '';
+							return `<input type="${key}" id="{{::vormInput.getInputId()}}" ${placeholder}/>`;
+						})
+						.value()
+				)
+				.value();
+				
 			modelTemplates.select = `<select id="{{::vormInput.getInputId()}}" ng-options="option.value as option.label for option in vormInput.getOptions()"><option value="" data-ng-show="vormInput.getInvokedData('notSelectedLabel')">{{vormInput.getInvokedData('notSelectedLabel')}}</option></select>`;
 			
 			modelTemplates = _.mapValues(modelTemplates, function ( template ) {
 				return angular.element(template);
 			});	
 			
+			function modifyModelTemplates ( processor ) {
+				modelTemplates = _.mapValues(modelTemplates, function ( template, type ) {
+					return processor(template, type);
+				});
+			}
+			
+			function modifyTemplate ( processor ) {
+				const processedEl = processor(angular.element(wrapperTemplate));
+				processedEl.attr('vorm-field', '');
+				wrapperTemplate = processedEl[0].outerHTML;
+			}
+			
+			modifyTemplate(function ( ) {
+				return angular.element(wrapperTemplate);	
+			});
+			
+			
 			return {
 				$get: [ '$compile', function ( $compile ) {
 					
-					vormTemplateService.getDefaultWrapper = function ( ) {
-						return defaultWrapper;	
+					vormTemplateService.getDefaultTemplate = function ( ) {
+						return wrapperTemplate;	
 					};
 					
-					vormTemplateService.getDefaultTemplate = function ( ) {
-						return defaultTemplate;	
+					vormTemplateService.getDefaultControlTemplate = function ( ) {
+						return controlTemplate;
 					};
 					
 					vormTemplateService.getModelCompiler = function ( type, template ) {
@@ -106,22 +120,8 @@
 					return vormTemplateService;
 					
 				}],
-				modifyModelTemplates: function ( processor ) {
-					modelTemplates = _.mapValues(modelTemplates, function ( template, type ) {
-						return processor(template, type);
-					});
-				},
-				modifyDefaultWrapper: function ( processor ) {
-					const processedEl = processor(angular.element(defaultWrapper));
-					processedEl.attr('vorm-field', '');
-					defaultWrapper = processedEl[0].outerHTML;
-				},
-				modifyDefaultTemplate: function ( processor ) {
-					const processedEl = processor(angular.element(defaultTemplate));
-					let el = angular.element('<p></p>');
-					el.append(processedEl);
-					defaultTemplate = el[0].innerHTML;
-				}
+				modifyModelTemplates: modifyModelTemplates,
+				modifyTemplate: modifyTemplate
 			};
 			
 		}]);

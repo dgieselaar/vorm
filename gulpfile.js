@@ -1,6 +1,5 @@
 /*global require,__dirname*/
-var fs = require('fs'),
-	gulp = require('gulp'),
+var gulp = require('gulp'),
 	sourcemaps = require('gulp-sourcemaps'),
 	cached = require('gulp-cached'),
 	plumber = require('gulp-plumber'),
@@ -72,7 +71,7 @@ gulp.task('helper', function ( ) {
 	
 	return stream;
 	
-})
+});
 
 gulp.task('build', build);
 

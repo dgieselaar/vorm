@@ -66,11 +66,7 @@ describe('vormTemplateService', function ( ) {
 				return el;
 			});
 			
-			vormTemplateServiceProvider.modifyDefaultWrapper(function ( ) {
-				return angular.element(`<custom-wrapper></custom-wrapper>`);
-			});
-			
-			vormTemplateServiceProvider.modifyDefaultTemplate(function ( ) {
+			vormTemplateServiceProvider.modifyTemplate(function ( ) {
 				return angular.element(`<custom-template></custom-template>`);
 			});
 			
@@ -87,14 +83,6 @@ describe('vormTemplateService', function ( ) {
 			const el = service.getModelCompiler('text')($rootScope.$new());
 			
 			expect(el[0].tagName.toLowerCase()).toBe('custom-input');
-			
-		});
-		
-		it('should return the modified default wrapper', function ( ) {
-			
-			const el = angular.element(service.getDefaultWrapper());
-			
-			expect(el[0].tagName.toLowerCase()).toBe('custom-wrapper');
 			
 		});
 		

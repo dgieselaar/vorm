@@ -1,14 +1,30 @@
+/*global angular*/
 (function ( ) {
 	
 	angular.module('vorm')
 		.directive('vormFieldWrapper', [ 'vormTemplateService', function ( vormTemplateService ) {
 			
+			let wrapped = angular.element(vormTemplateService.getDefaultTemplate());
+			
+			wrapped.find('vorm-control').append('<ng-transclude></ng-transclude>');
+			
+			const template = wrapped[0].outerHTML;
+			
 			return {
-				restrict: 'EA',
+				restrict: 'A',
 				transclude: true,
+				template: template,
 				replace: true,
-				template: vormTemplateService.getDefaultWrapper()
-			}
+				controller: [ '$attrs', function ( $attrs ) {
+					
+					var ctrl = this;
+					
+					ctrl.getLabel = function ( ) {
+						return $attrs.label;	
+					};
+					
+				}]
+			};
 			
 		}]);
 	

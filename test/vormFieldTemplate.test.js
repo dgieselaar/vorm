@@ -1,4 +1,4 @@
-/*global angular,describe,beforeEach,inject,module,it,expect*/
+/*global angular,describe,beforeEach,inject,module,it,expect,spyOn*/
 describe('vormFieldTemplate', function ( ) {
 	
 	var $rootScope,
@@ -23,8 +23,6 @@ describe('vormFieldTemplate', function ( ) {
 			</form>
 		`);
 		
-		const tplEl = form.children().eq(0);
-		
 		scope.config = config;
 		
 		$compile(form)(scope);
@@ -32,8 +30,6 @@ describe('vormFieldTemplate', function ( ) {
 		$rootScope.$digest();
 		
 		tpl = form.children();
-		
-		let children = form;
 		
 		vormFormCtrl = form.controller('vormForm');
 		vormFieldCtrl = vormFormCtrl.getFields()[0];

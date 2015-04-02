@@ -4,17 +4,18 @@
 	angular.module('vorm')
 		.directive('vormFieldTemplate', [ 'vormTemplateService', 'VormValueType', 'VormModelListCtrl', 'vormInvoke', function ( vormTemplateService, VormValueType, VormModelListCtrl, vormInvoke ) {
 			
+			let wrapperEl = angular.element(vormTemplateService.getDefaultTemplate()),
+				templateEl = angular.element(vormTemplateService.getDefaultControlTemplate());
+			
+			angular.element(wrapperEl[0].querySelectorAll('vorm-control')).append(templateEl);
+			
+			const template = wrapperEl[0].outerHTML;
+			
 			return {
+				scope: true,
 				restrict: 'E',
 				require: [ 'vormFieldTemplate', 'vormField', '^?vormForm' ],
-				template: function ( ) {
-					var wrapperEl = angular.element(vormTemplateService.getDefaultWrapper()),
-						templateEl = angular.element(vormTemplateService.getDefaultTemplate());
-					
-					angular.element(wrapperEl[0].querySelectorAll('[ng-transclude], ng-transclude')).replaceWith(templateEl);
-					
-					return wrapperEl[0].outerHTML;
-				},
+				template: template,
 				replace: true,
 				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
 					
