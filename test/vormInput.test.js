@@ -1,4 +1,4 @@
-/*global describe,module*/
+/*global describe,module,beforeEach,inject,angular,expect,it,jasmine*/
 describe('vormInput', function ( ) {
 	
 	let $rootScope,
@@ -29,7 +29,7 @@ describe('vormInput', function ( ) {
 		
 		const element = angular.element(`
 			<div>
-				<vorm-field-template name="foo" type="text"/>
+				<vorm-field-template name="foo" type="text"></vorm-field-template>
 			</div>
 		`);
 		
@@ -45,9 +45,7 @@ describe('vormInput', function ( ) {
 	it('should replace itself with the transcluded content', function ( ) {
 		
 		const element = angular.element(`
-			<div>
 				<input type="text" ng-model="foo" vorm-field-wrapper/>
-			</div>
 		`);
 		const scope = $rootScope.$new();
 		
@@ -57,9 +55,9 @@ describe('vormInput', function ( ) {
 		
 		scope.$digest();
 		
-		const vormFieldCtrl = element.find('div').inheritedData('$vormFieldController');
+		const vormFieldCtrl = element.controller('vormField');
 		
-		expect(element[0].querySelectorAll('[vorm-field]').length).toBe(1);
+		expect(element.attr('vorm-field')).toBeDefined();
 		
 		expect(vormFieldCtrl).toBeDefined();
 		
@@ -113,7 +111,7 @@ describe('vormInput', function ( ) {
 			
 			scope = $rootScope.$new();
 			scope.data = {
-				options: [ '$values', function ( $values ) {
+				options: [ '$values', function ( /*$values*/ ) {
 					return [
 						{
 							name: 'foo',
@@ -125,7 +123,7 @@ describe('vormInput', function ( ) {
 						}
 					];
 				}]
-			}
+			};
 			
 			$compile(element)(scope);
 			

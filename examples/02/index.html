@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Use JSON to generate a simple form</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+		
+		<!-- vorm -->
+		<script src="../../vorm.js"></script>
+		<!-- end of vorm -->
+		
+		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/languages/javascript.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+		
+		
+<script id="app">
+	angular.module('app', [ 'vorm' ])
+		.controller('FormController', [ function ( ) {
+			
+			var ctrl = this,
+				selectData = {
+					options: [
+						{
+							value: 'male',
+							label: 'Male'
+						},
+						{
+							value: 'female',
+							label: 'Female'
+						}
+					],
+					notSelectedLabel: 'Unspecified'
+				};
+				
+			ctrl.values = {};
+			
+			ctrl.handleSubmit = function ( values ) {
+				console.log('submitted with', values);	
+			};
+			
+			ctrl.handleChange = function ( ) {
+				console.log('change', arguments);
+			};
+			
+			ctrl.getSelectData = function ( ) {
+				return selectData;	
+			};
+			
+		}])
+		.config([ 'vormTemplateServiceProvider', function ( vormTemplateServiceProvider ) {
+			
+			vormTemplateServiceProvider.modifyModelTemplates(function ( el, type ) {
+				el.addClass('form-control');
+				return el;
+			});
+			
+		}]);
+</script>
+		
+		<style>
+			.vorm-field-label {
+				padding: 4px 0;
+			}
+			
+			.vorm-field-required .vorm-field-label::after {
+				content: "(*)";
+			}
+			
+		</style>
+		
+	</head>
+	<body ng-app="app">
+			
+		<div class="col-md-6" style="padding: 20px" 
+			form-template>
+			
+	<form 
+		vorm-form 
+		vorm-submit="ctrl.handleSubmit($values)" 
+		vorm-change="ctrl.handleChange($name)"
+		ng-controller="FormController as ctrl"
+		>
+		
+		<fieldset class="form-group">
+			<vorm-field-template name="first_name" type="text" required="true" label="First name"></vorm-field-template>
+			<vorm-field-template name="last_name" type="text" required="true" label="Last name"></vorm-field-template>
+			<vorm-field-template name="age" type="number" label="Age"></vorm-field-template>
+			<vorm-field-template name="gender" type="select" data="ctrl.getSelectData()" label="Gender"></vorm-field-template>
+			
+		</fieldset>
+		
+		<button class="btn btn-primary" ng-disabled="!vormForm.isValid()" type"submit">
+			Submit
+		</button>
+	</form>
+	<div style="color: #333; background-color: #f2f2f2; padding: 5px; margin-top: 20px">Open up your console to see some logging.</div>
+		</div>
+		
+		<div class="col-md-6">
+			<pre style="tab-size: 4 !important;padding: 0px !important"><code form class="html"></code></pre>
+			<pre style="tab-size: 4 !important;padding: 0px !important"><code js></code></pre>
+		</div>
+		
+	
+	<script>
+		void function ( ) {
+			var script = document.querySelector('script#app'),
+				tpl = document.querySelector('[form-template]'),
+				jsCode = document.querySelector('code[js]'),
+				formCode = document.querySelector('code[form]');
+				
+			jsCode.textContent = script.textContent;
+			formCode.textContent = tpl.innerHTML;
+			
+			hljs.highlightBlock(jsCode);
+			hljs.highlightBlock(formCode);
+		}();
+	</script>
+		
+	</body>
+</html>
