@@ -17,9 +17,7 @@ function getUnitTestFiles ( ) {
 		'node_modules/angular-mocks/angular-mocks.js',
 		'src/**/_*.js',
 		'src/**/*.js',
-		'src/vormModelDelegate.test.js'
-		// 'test/vormControlList.test.js'
-		// 'test/**/*.js'
+		'test/**/*.js'
 	];
 }
 

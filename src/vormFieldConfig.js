@@ -28,7 +28,9 @@
 						}
 						
 						if(_.isArray(config.required) || typeof config.required === 'function') {
-							$scope.$watch(ctrl.invoke.bind(config.required), function ( isRequired ) {
+							$scope.$watch(function ( ) {
+									return ctrl.invoke(config.required);
+								}, function ( isRequired ) {
 								vormField.setRequired(!!isRequired);
 							});
 						} else {
@@ -55,10 +57,6 @@
 						return config;	
 					};
 					
-					ctrl.getData = function ( ) {
-						return config.data;	
-					};
-					
 					ctrl.invokeData = function ( key ) {
 						return ctrl.invoke(config.data[key]);	
 					};
@@ -79,8 +77,9 @@
 					};
 					
 				}],
+				controllerAs: 'vormFieldConfig',
 				link: function ( scope, element, attrs, controllers ) {
-					controllers[0].link(controllers.slice(1));
+					controllers.shift().link(controllers);
 				}
 				
 			};

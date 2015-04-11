@@ -1,5 +1,5 @@
-/*global describe,module,beforeEach,inject,angular,expect,it,jasmine*/
-describe('vormInput', function ( ) {
+/*global describe,module,beforeEach,inject,angular,expect,it,jasmine,spyOn*/
+describe('vormControl', function ( ) {
 	
 	let $rootScope,
 		$compile;
@@ -15,7 +15,7 @@ describe('vormInput', function ( ) {
 	it('should throw an error if no template or transclude is available', function ( ) {
 		
 		const element = angular.element(`
-			<vorm-input/>
+			<vorm-control/>
 		`);
 		
 		expect(function ( ) {
@@ -37,7 +37,7 @@ describe('vormInput', function ( ) {
 		
 		$rootScope.$digest();
 		
-		expect(element.find('vorm-input').length).toBe(0);
+		expect(element.find('vorm-control-replace').length).toBe(0);
 		expect(element.find('input').length).toBe(1);
 		
 	});
@@ -125,6 +125,13 @@ describe('vormInput', function ( ) {
 				}]
 			};
 			
+			if(options.limit) {
+				options.valueType = {
+					type: 'list',
+					limit: options.limit
+				};
+			}
+			
 			$compile(element)(scope);
 			
 			scope.$digest();
@@ -132,7 +139,7 @@ describe('vormInput', function ( ) {
 			vormFormCtrl = element.controller('vormForm');
 			vormFieldCtrl = element.children().eq(0).controller('vormField');
 			
-			delegate = element.children().eq(0).controller('vormFieldTemplate').getDelegates()[0];
+			delegate = element.find('vorm-control-list').controller('vormControlList').getDelegates()[0];
 		}
 		
 		it('should pass the model to the delegate', function ( ) {
@@ -147,11 +154,11 @@ describe('vormInput', function ( ) {
 			
 			compile();
 			
-			delegate.clearValue();
+			delegate.clearViewValue();
 			
 			scope.$digest();
 			
-			expect(vormFieldCtrl.getValue()).toBeUndefined();
+			expect(vormFieldCtrl.getValue()).toBeNull();
 			
 		});
 		
@@ -161,8 +168,7 @@ describe('vormInput', function ( ) {
 				version: 3
 			});
 			
-			const templateCtrl = element.children().eq(0).controller('vormFieldTemplate');
-			const inputCtrl = templateCtrl.getInputs()[0];
+			const inputCtrl = element.find('vorm-control').controller('vormControl');
 			
 			const opts = inputCtrl.getOptions();
 			
@@ -176,8 +182,7 @@ describe('vormInput', function ( ) {
 				version: 4
 			});
 			
-			const templateCtrl = element.children().eq(0).controller('vormFieldTemplate');
-			const inputCtrl = templateCtrl.getInputs()[0];
+			const inputCtrl = element.find('vorm-control').controller('vormControl');
 			
 			const opts = inputCtrl.getOptions();
 			
@@ -191,8 +196,8 @@ describe('vormInput', function ( ) {
 			
 			compile();
 			
-			const templateCtrl = element.children().eq(0).controller('vormFieldTemplate');
-			const inputCtrl = templateCtrl.getInputs()[0];
+			const inputCtrl = element.find('vorm-control').controller('vormControl');
+			
 			const spy = jasmine.createSpy();
 			
 			scope.data.options[1] = spy;
@@ -209,8 +214,8 @@ describe('vormInput', function ( ) {
 				form: false
 			});
 			
-			const templateCtrl = element.children().eq(0).controller('vormFieldTemplate');
-			const inputCtrl = templateCtrl.getInputs()[0];
+			const inputCtrl = element.find('vorm-control').controller('vormControl');
+			
 			const spy = jasmine.createSpy();
 			
 			scope.data.options[1] = spy;
@@ -222,6 +227,25 @@ describe('vormInput', function ( ) {
 			value[vormFieldCtrl.getName()] = vormFieldCtrl.getValue();
 			
 			expect(spy).toHaveBeenCalledWith(value);
+			
+		});
+		
+		it('should remove itself if destroyed', function ( ) {
+			
+			compile({
+				limit: 2
+			});
+			
+			const listCtrl = element.find('vorm-control-list').controller('vormControlList');
+			const focusableCtrl = element.find('div').controller('vormFocusableList');
+			
+			listCtrl.createDelegate();
+			
+			spyOn(focusableCtrl, 'removeId').and.callThrough();
+			
+			element.find('vorm-control').eq(0).scope().$destroy();
+			
+			expect(focusableCtrl.removeId).toHaveBeenCalled();
 			
 		});
 		

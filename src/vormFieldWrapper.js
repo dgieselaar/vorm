@@ -7,6 +7,8 @@
 			let wrapped = angular.element(vormTemplateService.getDefaultTemplate());
 			
 			wrapped.find('vorm-replace').append('<ng-transclude></ng-transclude>');
+			wrapped.attr('vorm-field-config', 'vormFieldWrapper.getConfig()');
+			wrapped.attr('vorm-focusable-list', '');
 			
 			const template = wrapped[0].outerHTML;
 			
@@ -17,13 +19,18 @@
 				replace: true,
 				controller: [ '$attrs', function ( $attrs ) {
 					
-					var ctrl = this;
+					var ctrl = this,	
+						config = {
+							name: $attrs.name,
+							label: $attrs.label
+						};
 					
-					ctrl.getLabel = function ( ) {
-						return $attrs.label;	
+					ctrl.getConfig = function ( ) {
+						return config;
 					};
 					
-				}]
+				}],
+				controllerAs: 'vormFieldWrapper'
 			};
 			
 		}]);

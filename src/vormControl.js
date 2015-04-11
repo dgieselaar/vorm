@@ -45,9 +45,12 @@
 						vormFieldTemplate.getModelCompiler()($scope, function ( clonedElement ) {
 							
 							let focusable,
-								selector = 'input,keygen,meter,output,progress,select,textarea';
+								selector = 'input,keygen,meter,output,progress,select,textarea',
+								replace = $element.find('vorm-control-replace');
 							
-							$element.prepend(clonedElement);
+							replace.replaceWith(clonedElement);
+							
+							clonedElement[0].className += ' ' + replace[0].className;
 							
 							if(clonedElement[0][matchesFuncName](selector)) {
 								focusable = clonedElement;
@@ -76,7 +79,7 @@
 						// fixed in 1.4.x
 						// https://github.com/angular/angular.js/pull/10639
 						ctrl.getOptions = function ( ) {
-							return vormFieldTemplate.invokeData('options');	
+							return ctrl.invokeData('options');	
 						};
 					} else {
 						ctrl.getOptions = (function ( ) {
@@ -84,7 +87,7 @@
 							let options;
 							
 							return function ( ) {
-								const nwOpts = vormFieldConfig.invokeData('options');
+								const nwOpts = ctrl.invokeData('options');
 								if(options !== nwOpts && !angular.equals(options,nwOpts)) {
 									options = nwOpts;
 								}

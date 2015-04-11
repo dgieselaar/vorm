@@ -18,12 +18,14 @@
 				'</div>';
 				
 			controlTemplate = 
-				'<vorm-control ng-repeat="delegate in vormControlList.getDelegates()">' + 
-					'<vorm-control-replace></vorm-control-replace>' + 
-					'<button class="vorm-control-clear-button" type="button" ng-click="vormControlList.handleClearClick(delegate)" ng-show="vormControlList.isClearButtonVisible()">x</button>' + 
-				'</vorm-control>' + 
-				'<vorm-delegate-button>' + 
-				'</vorm-delegate-button>';
+				'<vorm-control-list>' + 
+					'<vorm-control ng-repeat="delegate in vormControlList.getDelegates()" delegate="delegate">' + 
+						'<vorm-control-replace></vorm-control-replace>' + 
+						'<button class="vorm-control-clear-button" type="button" ng-click="vormControlList.handleClearClick(delegate)" ng-show="vormControlList.isClearButtonVisible()">x</button>' + 
+					'</vorm-control>' + 
+					'<vorm-delegate-button>' + 
+					'</vorm-delegate-button>' +
+				'</vorm-control-list>';
 				
 			modelTemplates = _(modelTemplates)
 				.assign(
@@ -61,7 +63,9 @@
 			}
 			
 			function modifyControlTemplate ( processor ) {
-				controlTemplate = processor(angular.element(controlTemplate))[0].outerHTML;
+				const wrapper = angular.element('<p></p>');
+				wrapper.append(processor(angular.element(controlTemplate)));
+				controlTemplate = wrapper[0].innerHTML;
 			}
 			
 			modifyTemplate(function ( ) {

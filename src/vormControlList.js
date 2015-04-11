@@ -2,40 +2,55 @@
 (function ( ) {
 
 	angular.module('vorm')
-		.directive('vormControlList', [ 'vormTemplateService', 'VormModelDelegate', function ( vormTemplateService, VormModelDelegate ) {
+		.directive('vormControlList', [  'VormModelDelegate', '$document', function ( VormModelDelegate, $document ) {
 			
 			return {
-				require: [ 'vormControlList', '^vormFieldConfig', '^vormField' ],
+				require: [ 'vormControlList', '^vormFieldConfig', '^?vormFocusableList', '^vormField' ],
 				restrict: 'E',
-				template: vormTemplateService.getDefaultControlTemplate(),
 				controller: [ '$scope', function ( $scope ) {
 					
 					let ctrl = this,
 						delegates = [],
 						limit = NaN,
 						vormFieldConfig,
+						vormFocusableList,
 						vormField;
 						
-					function triggerAsyncViewChange ( ) {
+					function triggerAsyncViewChange ( callback ) {
 						let unwatch = $scope.$watchCollection(vormField.getModels, function ( ) {
+							
 							vormField.triggerViewChange();
+							
+							if(callback) {
+								callback();
+							}
 							
 							unwatch();
 						});
 					}
+					
+					function setFocus ( ) {
+						if(vormFocusableList) {
+							let id = vormFocusableList.getId(),
+								el = $document[0].getElementById(id);
+							
+							if(el) {
+								el.focus();
+							}
+						}
+					}
 						
 					ctrl.link = function ( controllers ) {
 						
-						let typeOpts;
-						
 						vormFieldConfig = controllers[0];
-						vormField = controllers[1];
+						vormFocusableList = controllers[1];
+						vormField = controllers[2];
 						
-						typeOpts = vormFieldConfig.getConfig().valueType;
+						$scope.$watch(vormFieldConfig.getLimit, function ( limit ) {
+							ctrl.setLimit(limit);
+						});
 						
-						if(typeOpts && typeOpts.limit !== undefined) {
-							limit = typeOpts.limit;
-						}
+						ctrl.createDelegate();
 					};
 					
 					ctrl.getDelegates = function ( ) {
@@ -70,16 +85,16 @@
 					};
 					
 					ctrl.reachedLimit = function ( ) {
-						return limit > 0 && delegates.length > limit;
+						return limit > 0 && delegates.length >= limit;
 					};
 					
 					ctrl.isClearButtonVisible = function ( ) {
-						return delegates.length > 1;
+						return vormField.getValueType() === 'list';
 					};
 					
 					ctrl.handleCreateClick = function ( ) {
 						ctrl.createDelegate();
-						triggerAsyncViewChange();	
+						triggerAsyncViewChange(setFocus);
 					};
 					
 					ctrl.handleClearClick = function ( delegate ) {
@@ -87,7 +102,7 @@
 							delegate.clearViewValue();
 						} else {
 							ctrl.removeDelegate(delegate);
-							triggerAsyncViewChange();
+							triggerAsyncViewChange(setFocus);
 						}
 					};
 					
@@ -95,7 +110,7 @@
 				controllerAs: 'vormControlList',
 				link: function ( scope, element, attrs, controllers ) {
 					
-					controllers[0].link(controllers.slice(1));
+					controllers.shift().link(controllers);
 					
 				}
 			};

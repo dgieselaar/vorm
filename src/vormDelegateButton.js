@@ -29,11 +29,11 @@
 				};
 				
 				ctrl.isDisabled = function ( ) {
-					return vormControlList ? vormControlList.reachedLimit() : true;
+					return vormControlList.reachedLimit();
 				};
 				
 				ctrl.isVisible = function ( ) {
-					return vormField ? vormField.getValueType() === 'list' : false;
+					return vormField.getValueType() === 'list';
 				};
 				
 				ctrl.getLabel = function ( ) {
@@ -47,7 +47,7 @@
 			}],
 			link: function ( scope, element, attrs, controllers ) {
 				
-				controllers[0].link(controllers.slice(1));
+				controllers.shift().link(controllers);
 				
 			},
 			controllerAs: 'vormDelegateButton'

@@ -2,21 +2,34 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.directive('VormModelDelegate', [ 'VormModelDelegateCtrl', function ( VormModelDelegateCtrl ) {
+		.factory('VormModelDelegate', [ function ( ) {
 			
-			return {
-				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
-					
-					var ctrl = this,
-						delegate = $scope.$eval($attrs.delegate);
-						
-					if(!delegate) {
-						delegate = new VormModelDelegateCtrl();
-					}
-					
-					ctrl.setNgModel = delegate.setNgModel;
-					
-				}]
+			return function ( name ) {
+				
+				const delegate = {};
+				let ngModel;
+				
+				delegate.value = null;
+				
+				delegate.getName = function ( ) {
+					return name;
+				};
+				
+				delegate.setNgModel = function ( ) {
+					ngModel = arguments[0];
+				};
+				
+				delegate.getNgModel = function ( ) {
+					return ngModel;	
+				};
+				
+				delegate.clearViewValue = function ( ) {
+					ngModel.$setViewValue(null);
+					ngModel.$render();
+				};
+				
+				return delegate;
+				
 			};
 			
 		}]);
