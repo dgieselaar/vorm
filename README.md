@@ -33,6 +33,7 @@ For now, read the source code, [ping me on Twitter](https://twitter.com/plestik)
 * [01 - Generate a simple form with JSON](http://plestik.github.io/vorm/examples/01/)
 * [02 - Generate a simple form with HTML](http://plestik.github.io/vorm/examples/02/)
 * [03 - Using a custom theme (in this case, Angular Material)](http://plestik.github.io/vorm/examples/03/)
+* [04 - Allow multiple controls per field](http://plestik.github.io/vorm/examples/04/)
 
 More to come!
 
