@@ -1,29 +1,39 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Vorm by plestik</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">Vorm</h1>
-      <h2 class="project-tagline">Write your Angular forms in JSON and HTML, use the same API</h2>
-      <a href="https://github.com/plestik/vorm" class="btn">View on GitHub</a>
-      <a href="https://github.com/plestik/vorm/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/plestik/vorm/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+    <div class="wrapper">
+      <header>
+        <h1>Vorm</h1>
+        <p>Write your Angular forms in JSON and HTML, use the same API</p>
 
-    <section class="main-content">
-      <p><img src="https://travis-ci.org/plestik/vorm.svg?branch=master" alt="Tests passing"></p>
+        <p class="view"><a href="https://github.com/plestik/vorm">View the Project on GitHub <small>plestik/vorm</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/plestik/vorm/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/plestik/vorm/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/plestik/vorm">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><img src="https://travis-ci.org/plestik/vorm.svg?branch=master" alt="Tests passing"></p>
 
 <h1>
 <a id="vorm" class="anchor" href="#vorm" aria-hidden="true"><span class="octicon octicon-link"></span></a>vorm</h1>
 
-<p>Write your Angular forms in JSON and HTML, use the same API</p>
+<p>Write your Angular forms in JSON and HTML, use the same API.</p>
 
 <h2>
 <a id="what-does-vorm-do" class="anchor" href="#what-does-vorm-do" aria-hidden="true"><span class="octicon octicon-link"></span></a>What does vorm do?</h2>
@@ -35,8 +45,8 @@
 
 <p>Vorm has two features which as far as I can tell set it apart: </p>
 
-<h5>
-<a id="1-use-both-json-and-html-for-generating-or-decorating-your-forms" class="anchor" href="#1-use-both-json-and-html-for-generating-or-decorating-your-forms" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Use both JSON and HTML for generating or decorating your forms</h5>
+<h4>
+<a id="1-use-both-json-and-html-for-generating-or-decorating-your-forms" class="anchor" href="#1-use-both-json-and-html-for-generating-or-decorating-your-forms" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Use both JSON and HTML for generating or decorating your forms</h4>
 
 <p>There are three ways to create a form:</p>
 
@@ -46,13 +56,13 @@
 <li>Using the <code>vorm-field-wrapper</code> directive to decorate existing controls. The directive will unpack its contents and wrap it with the default wrapper template.</li>
 </ul>
 
-<h5>
-<a id="2-multiple-controls-per-field-are-supported-out-of-the-box" class="anchor" href="#2-multiple-controls-per-field-are-supported-out-of-the-box" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Multiple controls per field are supported out of the box</h5>
+<h4>
+<a id="2-multiple-controls-per-field-are-supported-out-of-the-box" class="anchor" href="#2-multiple-controls-per-field-are-supported-out-of-the-box" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Multiple controls per field are supported out of the box</h4>
 
 <p>You can add any number of controls, of any type, to a <code>vorm-field</code>, and it will resolve the values for you in a smart way. It makes two things easy: nested (mini-)forms and lists of controls. The latter is especially helpful if the user needs to provide a list for a certain property instead of just one value (for instance, a list of airports the user wishes to travel from). This is the main reason this library exists.</p>
 
-<h6>
-<a id="some-other-features" class="anchor" href="#some-other-features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Some other features</h6>
+<h2>
+<a id="what-else-does-it-do" class="anchor" href="#what-else-does-it-do" aria-hidden="true"><span class="octicon octicon-link"></span></a>What else does it do?</h2>
 
 <ul>
 <li>Customize/override wrap and control templates</li>
@@ -65,17 +75,32 @@
 <h2>
 <a id="how-do-i-get-started" class="anchor" href="#how-do-i-get-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>How do I get started?</h2>
 
-<p>For now, check out the examples, read the source code, or <a href="https://twitter.com/plestik">ping me on Twitter</a>.</p>
+<p>For now, read the source code, <a href="https://twitter.com/plestik">ping me on Twitter</a>, or check out the examples:</p>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/plestik/vorm">Vorm</a> is maintained by <a href="https://github.com/plestik">plestik</a>.</span>
+<ul>
+<li><a href="http://plestik.github.io/vorm/examples/01/">01 - Generate a simple form with JSON</a></li>
+<li><a href="http://plestik.github.io/vorm/examples/02/">02 - Generate a simple form with HTML</a></li>
+<li><a href="http://plestik.github.io/vorm/examples/03/">03 - Using a custom theme (in this case, Angular Material)</a></li>
+</ul>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+<p>More to come!</p>
+
+<h3>
+<a id="things-to-do-before-the-first-release" class="anchor" href="#things-to-do-before-the-first-release" aria-hidden="true"><span class="octicon octicon-link"></span></a>Things to do before the first release:</h3>
+
+<ul>
+<li>[ ] Support all basic input types</li>
+<li>[ ] Make sure <code>vorm-field-wrapper</code> works with <code>compile</code> &amp; <code>.replaceWith</code> instead of transclusion</li>
+<li>[ ] Write up examples for value types <code>list</code> and <code>object</code>
+</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/plestik">plestik</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
-
-    </section>
-
-  
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
-
