@@ -28,6 +28,7 @@
 		
 		
 <script id="app">
+	/*global angular*/
 	angular.module('app', [ 'vorm', 'ngMaterial', 'ngAnimate', 'ngMdIcons' ])
 		.controller('FormController', [ function ( ) {
 			
@@ -72,23 +73,21 @@
 					el.attr('ng-model', 'model.value');
 					var wrap = angular.element(`
 						<md-input-container flex class="md-default-theme">
-		               		<label>
-		           				{{vormFieldTemplate.getLabel()}}
-		       				</label>
-	           				<ng-transclude></ng-transclude>
-	           				<div class="md-placeholder" ng-repeat-end>
-	           					{{vormFieldTemplate.getInvokedData('placeholder')}}
+		               		<vorm-label></vorm-label>
+	           				<vorm-replace></vorm-replace>
+	           				<div class="md-placeholder">
+	           					{{vormFieldConfig.getInvokedData('placeholder')}}
 	           				</div>
 	               		</md-input-container>
 					`);
-					wrap.find('ng-transclude').replaceWith(el);
+					wrap.find('vorm-replace').replaceWith(el);
 					el = wrap;
 					break;
 					
 					case 'select':
 					el = angular.element(`
-						<md-select placeholder="{{vormInput.getInvokedData('notSelectedLabel')}}">
-					  		<md-option ng-value="option.value" ng-repeat="option in vormInput.getOptions() track by option.value">
+						<md-select placeholder="{{vormControl.invokeData('notSelectedLabel')}}">
+					  		<md-option ng-value="option.value" ng-repeat="option in vormControl.getOptions() track by option.value">
 					  			{{option.label}}
 					  		</md-option>
 						</md-select>
@@ -99,18 +98,12 @@
 				return el;
 			});
 			
-			vormTemplateServiceProvider.modifyDefaultWrapper(function ( el ) {
+			vormTemplateServiceProvider.modifyTemplate(function ( el ) {
 				return angular.element(`
            			<div ng-class="vormField.getClassObj()">
-           				<ng-transclude/>
+           				<vorm-replace></vorm-replace3>
                		</div>
                	`);
-			});
-			
-			vormTemplateServiceProvider.modifyDefaultTemplate(function ( el ) {
-				return angular.element(`             
-					<vorm-input delegate="delegate" compiler="vormFieldTemplate.getModelCompiler()" data="vormFieldTemplate.getInputData()" ng-repeat="delegate in vormFieldTemplate.getDelegates()"></vorm-input>
-				`);
 			});
 			
 		}]);

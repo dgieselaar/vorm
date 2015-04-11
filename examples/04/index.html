@@ -39,26 +39,14 @@
 					required: true
 				},
 				{
-					name: 'age',
-					type: 'number',
-					label: 'Age'
-				},
-				{
-					name: 'gender',
-					type: 'select',
-					label: 'Gender',
-					data: {
-						options: [
-							{
-								label: 'Male',
-								value: 'male'
-							},
-							{
-								label: 'Female',
-								value: 'female'
-							}
-						],
-						notSelectedLabel: 'Unspecified'
+					name: 'names',
+					type: 'text',
+					label: 'Names of your children',
+					required: true,
+					valueType: {
+						type: 'list',
+						limit: 10,
+						addLabel: 'Add child'
 					}
 				}
 			];
@@ -83,6 +71,10 @@
 				return el;
 			});
 			
+			vormTemplateServiceProvider.modifyControlTemplate(function ( el ) {
+				return el;
+			});
+			
 		}]);
 </script>
 		
@@ -93,7 +85,20 @@
 			}
 			
 			.vorm-field-required .vorm-field-label::after {
-				content: "(*)";
+				content: " (*)";
+			}
+			
+			vorm-control {
+				display: flex;
+				padding-bottom: 10px;
+			}
+			
+			.vorm-control-clear-button {
+				margin-left: 5px;
+			}
+			
+			.vorm-delegate-button {
+				margin-top: 10px;
 			}
 			
 		</style>
@@ -118,6 +123,7 @@
 			Submit
 		</button>
 	</form>
+	
 	<div style="color: #333; background-color: #f2f2f2; padding: 5px; margin-top: 20px">Open up your console to see some logging.</div>
 		</div>
 		
