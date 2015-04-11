@@ -2,34 +2,21 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.factory('VormModelDelegate', [ function ( ) {
+		.directive('VormModelDelegate', [ 'VormModelDelegateCtrl', function ( VormModelDelegateCtrl ) {
 			
-			return function ( name ) {
-				
-				const delegate = {};
-				let ngModel;
-				
-				delegate.value = undefined;
-				
-				delegate.getName = function ( ) {
-					return name;
-				};
-				
-				delegate.setNgModel = function ( ) {
-					ngModel = arguments[0];
-				};
-				
-				delegate.getNgModel = function ( ) {
-					return ngModel;	
-				};
-				
-				delegate.clearValue = function ( ) {
-					ngModel.$setViewValue(undefined);
-					ngModel.$render();
-				};
-				
-				return delegate;
-				
+			return {
+				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
+					
+					var ctrl = this,
+						delegate = $scope.$eval($attrs.delegate);
+						
+					if(!delegate) {
+						delegate = new VormModelDelegateCtrl();
+					}
+					
+					ctrl.setNgModel = delegate.setNgModel;
+					
+				}]
 			};
 			
 		}]);

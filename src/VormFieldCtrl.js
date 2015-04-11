@@ -30,15 +30,23 @@
 				}
 				
 				function handleViewChange ( ) {
-					element.dispatchEvent(new VormEvent('viewchange', { name: name } ));
-					_.invoke(viewChangeListeners, 'call', null, name);
+					ctrl.triggerViewChange();
 				}
 				
 				function handleFormatterCall ( ) {
 					// now we know the model has changed
+					ctrl.triggerModelChange();
+				}
+				
+				ctrl.triggerModelChange = function ( ) {
 					element.dispatchEvent(new VormEvent('modelchange', { name: name } ));
 					_.invoke(modelChangeListeners, 'call', null, name);
-				}
+				};
+				
+				ctrl.triggerViewChange = function ( ) {
+					element.dispatchEvent(new VormEvent('viewchange', { name: name } ));
+					_.invoke(viewChangeListeners, 'call', null, name);
+				};
 				
 				ctrl.getName = function ( ) {
 					return name;

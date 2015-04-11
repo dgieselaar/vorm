@@ -2,31 +2,23 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.directive('ngModel', [ 'VormFieldCtrl', function ( VormFieldCtrl ) {
+		.directive('ngModel', [ function ( ) {
 			
 			return {
-				require: [ 'ngModel', '^?vormField', '^?vormForm', '^?vormInput' ],
+				require: [ 'ngModel', '^?vormModel' ],
 				link: function ( scope, element, attrs, controllers ) {
 					
-					let [ ngModel, vormField, vorm ] = controllers;
+					let [ ngModel, vormModel ] = controllers;
 					
-					if(vormField || vorm) {
-						
-						if(!vormField) {
-							vormField = new VormFieldCtrl(attrs.ngModel, element[0]);
-							vorm.addField(vormField);
-							scope.$on('$destroy', function ( ) {
-								vorm.removeField(vormField);
-							});
-						}
-						
-						vormField.addModel(ngModel);
-						
-						scope.$on('$destroy', function ( ) {
-							vormField.removeModel(ngModel);
-						});
-						
+					if(!vormModel) {
+						return;
 					}
+					
+					let unset = vormModel.setNgModel(ngModel);
+					
+					scope.$on('$destroy', function ( ) {
+						unset();
+					});
 					
 				}
 			};

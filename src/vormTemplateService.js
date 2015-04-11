@@ -14,15 +14,16 @@
 			wrapperTemplate = '' + 
 				'<div ng-class="vormField.getClassObj()">' + 
 					'<vorm-label></vorm-label>' + 
-					'<vorm-control></vorm-control>' +
+					'<vorm-replace></vorm-replace>' +
 				'</div>';
 				
-			controlTemplate = '<div class="vorm-control-list">' +
-				'<div class="vorm-control-list-item" ng-repeat="delegate in vormFieldTemplate.getDelegates()">' + 
-					'<vorm-input delegate="delegate" compiler="vormFieldTemplate.getModelCompiler()" data="vormFieldTemplate.getInputData()"></vorm-input>' +
-					'<button type="button" ng-click="vormFieldTemplate.clearDelegate(delegate)" ng-show="vormField.getValueType()===\'multiple\'">x</button>' + 
-				'</div>' + 
-			'</div>';
+			controlTemplate = 
+				'<vorm-control ng-repeat="delegate in vormControlList.getDelegates()">' + 
+					'<vorm-control-replace></vorm-control-replace>' + 
+					'<button class="vorm-control-clear-button" type="button" ng-click="vormControlList.handleClearClick(delegate)" ng-show="vormControlList.isClearButtonVisible()">x</button>' + 
+				'</vorm-control>' + 
+				'<vorm-delegate-button>' + 
+				'</vorm-delegate-button>';
 				
 			modelTemplates = _(modelTemplates)
 				.assign(
@@ -30,15 +31,15 @@
 						.zipObject()
 						.mapValues(function ( value, key ) {
 							var placeholder = _.includes('text search tel url email number password'.split(' '), key) ?
-								`placeholder="{{vormInput.invoke('placeholder')}}"`
+								`placeholder="{{vormControl.invokeData('placeholder')}}"`
 								: '';
-							return `<input type="${key}" id="{{::vormInput.getInputId()}}" ${placeholder}/>`;
+							return `<input type="${key}" ${placeholder}/>`;
 						})
 						.value()
 				)
 				.value();
 				
-			modelTemplates.select = `<select id="{{::vormInput.getInputId()}}" ng-options="option.value as option.label for option in vormInput.getOptions()"><option value="" data-ng-show="vormInput.getInvokedData('notSelectedLabel')">{{vormInput.getInvokedData('notSelectedLabel')}}</option></select>`;
+			modelTemplates.select = `<select ng-options="option.value as option.label for option in vormControl.getOptions()"><option value="" data-ng-show="vormControl.invokeData('notSelectedLabel')">{{vormControl.invokeData('notSelectedLabel')}}</option></select>`;
 			
 			modelTemplates = _.mapValues(modelTemplates, function ( template ) {
 				return angular.element(template);
@@ -53,11 +54,22 @@
 			function modifyTemplate ( processor ) {
 				const processedEl = processor(angular.element(wrapperTemplate));
 				processedEl.attr('vorm-field', '');
+				
+				processedEl.find('vorm-control').attr('limit', 'vormFieldConfig.getLimit()');
+				
 				wrapperTemplate = processedEl[0].outerHTML;
+			}
+			
+			function modifyControlTemplate ( processor ) {
+				controlTemplate = processor(angular.element(controlTemplate))[0].outerHTML;
 			}
 			
 			modifyTemplate(function ( ) {
 				return angular.element(wrapperTemplate);	
+			});
+			
+			modifyControlTemplate(function ( ) {
+				return angular.element(controlTemplate);
 			});
 			
 			
@@ -111,8 +123,8 @@
 							modelEl = el;
 						}
 					
-						modelEl.attr('ng-model', 'model.value');
-						modelEl.attr('ng-required', 'vormInput.isRequired()');
+						modelEl.attr('ng-model', 'delegate.value');
+						modelEl.attr('ng-required', 'vormControl.isRequired()');
 						
 						return $compile(el);
 					});
@@ -121,6 +133,7 @@
 					
 				}],
 				modifyModelTemplates: modifyModelTemplates,
+				modifyControlTemplate: modifyControlTemplate,
 				modifyTemplate: modifyTemplate
 			};
 			

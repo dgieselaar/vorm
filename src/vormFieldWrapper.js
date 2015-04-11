@@ -6,7 +6,7 @@
 			
 			let wrapped = angular.element(vormTemplateService.getDefaultTemplate());
 			
-			wrapped.find('vorm-control').append('<ng-transclude></ng-transclude>');
+			wrapped.find('vorm-replace').append('<ng-transclude></ng-transclude>');
 			
 			const template = wrapped[0].outerHTML;
 			

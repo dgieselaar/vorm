@@ -1,30 +1,38 @@
-/*global angular,_*/
+/*global angular*/
 (function ( ) {
 	
 	angular.module('vorm')
 		.directive('vormLabel', [ function ( ) {
 			
 			return {
-				require: [ 'vormLabel', '^?vormFieldTemplate', '^?vormFieldWrapper' ],
-				template: '<label>{{vormLabel.getLabel()}}</label>',
+				require: [ 'vormLabel', '^vormFieldConfig', '^vormFocusableList' ],
+				template: '<label class="vorm-field-label">{{vormLabel.getLabel()}}</label>',
 				replace: true,
-				controller: [ function ( ) {
+				controller: [ '$scope', '$element', function ( $scope, $element ) {
 					
-					var ctrl = this;
+					let ctrl = this,
+						vormFieldConfig,
+						vormFocusableList;
 					
 					ctrl.link = function ( controllers ) {
+						vormFieldConfig = controllers[0];
+						vormFocusableList = controllers[1];
 						
-						ctrl.getLabel = _(controllers)
-							.filter(_.identity)
-							.pluck('getLabel')
-							.value()[0];
-						
+						$scope.$watch(vormFocusableList.getId, function ( inputId ) {
+							$element.attr('for', inputId);
+						});
+					};
+					
+					ctrl.getLabel = function ( ) {
+						return vormFieldConfig.invoke(vormFieldConfig.getConfig().label);
 					};
 					
 				}],
 				controllerAs: 'vormLabel',
 				link: function ( scope, element, attrs, controllers ) {
+					
 					controllers[0].link(controllers.slice(1));
+					
 				}
 			};
 			
