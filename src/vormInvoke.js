@@ -1,12 +1,11 @@
-/*global angular*/
+/*global angular,_*/
 (function ( ) {
 	
 	angular.module('vorm')
-		.factory('vormInvoke', [ '$injector', function ( $injector ) {
+		.factory('vormInvoke', [ '$injector', '$parse', function ( $injector, $parse ) {
 			
-			return function ( invokable, locals ) {
-				
-				var value;
+			function invoke ( invokable, locals ) {
+				let value;
 				
 				if(!invokable) {
 					return invokable;
@@ -22,6 +21,22 @@
 				
 				return value;
 			}
+			
+			let invoker = function ( invokable, locals ) {
+				return invoke(invokable,locals);
+			};
+			
+			invoker.expr = function ( invokable, locals, scope ) {
+				let value;
+				if(typeof invokable === 'string') {
+					value = $parse(invokable)(scope, locals);
+				} else {
+					value = invoke(invokable, locals);
+				}
+				return value;
+			};
+			
+			return invoker;
 			
 		}]);
 	

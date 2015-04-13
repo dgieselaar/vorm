@@ -27,22 +27,6 @@
 					'</vorm-delegate-button>' +
 				'</vorm-control-list>';
 				
-			modelTemplates = _(modelTemplates)
-				.assign(
-					_('date datetime datetime-local email month number password search tel text time url week checkbox'.split(' '))
-						.zipObject()
-						.mapValues(function ( value, key ) {
-							var placeholder = _.includes('text search tel url email number password'.split(' '), key) ?
-								`placeholder="{{vormControl.invokeData('placeholder')}}"`
-								: '';
-							return `<input type="${key}" ${placeholder}/>`;
-						})
-						.value()
-				)
-				.value();
-				
-			modelTemplates.select = `<select ng-options="option.value as option.label for option in vormControl.getOptions()"><option value="" data-ng-show="vormControl.invokeData('notSelectedLabel')">{{vormControl.invokeData('notSelectedLabel')}}</option></select>`;
-			
 			modelTemplates = _.mapValues(modelTemplates, function ( template ) {
 				return angular.element(template);
 			});	
@@ -66,6 +50,10 @@
 				const wrapper = angular.element('<p></p>');
 				wrapper.append(processor(angular.element(controlTemplate)));
 				controlTemplate = wrapper[0].innerHTML;
+			}
+			
+			function registerType ( type, template ) {
+				modelTemplates[type] = template;
 			}
 			
 			modifyTemplate(function ( ) {
@@ -138,7 +126,8 @@
 				}],
 				modifyModelTemplates: modifyModelTemplates,
 				modifyControlTemplate: modifyControlTemplate,
-				modifyTemplate: modifyTemplate
+				modifyTemplate: modifyTemplate,
+				registerType: registerType
 			};
 			
 		}]);

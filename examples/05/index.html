@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Field types that are supported by default</title>
+		<title>Multiple controls per field</title>
 		<script src="../../node_modules/angular/angular.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
 
@@ -25,30 +25,31 @@
 			var ctrl = this,
 				fields;
 				
-			fields = _('text number email password url select radio textarea date datetime datetime-local month search tel time week'.split(' '))
-				.map(function ( type ) {
-					return {
-						name: type,
-						type: type,
-						label: type,
-						required: true
-					};
-				})
-				.value();
-				
-			_.filter(fields, function ( field ) {
-					return field.type === 'select' || field.type === 'radio';
-				})
-				.forEach(function ( field ) {
-					field.data = {
-						options: 'One Two'.split(' ').map(function ( key ) {
-							return {
-								value: key,
-								label: key
-							};
-						})
-					};
-				});
+			fields = [
+				{
+					name: 'first_name',
+					type: 'text',
+					label: 'First name',
+					required: true
+				},
+				{
+					name: 'last_name',
+					type: 'text',
+					label: 'Last name',
+					required: true
+				},
+				{
+					name: 'names',
+					type: 'text',
+					label: 'Names of your children',
+					required: true,
+					valueType: {
+						type: 'list',
+						limit: 10,
+						addLabel: 'Add child'
+					}
+				}
+			];
 			
 			ctrl.getFields = function ( ) {
 				return fields;  
@@ -71,7 +72,6 @@
 			});
 			
 			vormTemplateServiceProvider.modifyControlTemplate(function ( el ) {
-				el.attr('ng-class', '{ "has-error": !vormField.isValid(), "has-success": vormField.isValid() }');
 				return el;
 			});
 			

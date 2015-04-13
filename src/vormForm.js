@@ -2,7 +2,7 @@
 (function ( ) {
 	
 	angular.module('vorm')
-		.directive('vormForm', [ function ( ) { 
+		.directive('vormForm', [ 'VormValueScope', function ( VormValueScope ) { 
 			
 			return {
 				scope: true,
@@ -12,49 +12,26 @@
 					const ctrl = this,
 						fields = [],
 						changeListeners = [],
-						submitListeners = [];
-					
-					let values = {};
-						
-					function recalc ( ) {
-						values = _(fields)
-							.indexBy(function ( field ) {
-								return field.getName();
-							})
-							.mapValues(function ( field ) {
-								return field.getValue();
-							})
-							.value();
-							
-						Object.freeze(values);
-					}
+						submitListeners = [],
+						valueScope = new VormValueScope();
 						
 					function handleChange ( ) {
 						const outerArgs = arguments;
-						
-						recalc();
 						
 						_.each(changeListeners, function ( listener ) {
 							listener.apply(ctrl, outerArgs);	
 						});
 					}
 					
-					function handleModelChange ( ) {
-						recalc();
-					}
-					
 					ctrl.addField = function ( field ) {
 						fields.push(field);
 						field.viewChangeListeners.push(handleChange);
-						field.modelChangeListeners.push(handleModelChange);
-						recalc();
+						field.setValueScope(valueScope);
 					};
 					
 					ctrl.removeField = function ( field ) {
 						_.pull(fields, field);
 						_.pull(field.viewChangeListeners, handleChange);
-						_.pull(field.modelChangeListeners, handleModelChange);
-						recalc();
 					};
 					
 					ctrl.getFields = function ( ) {
@@ -62,7 +39,20 @@
 					};
 					
 					ctrl.getValues = function ( ) {
+						let values = _(fields)
+							.indexBy(function ( field ) {
+								return field.getName();
+							})
+							.mapValues(function ( field ) {
+								return field.getValue();
+							})
+							.value();
+						
 						return values;
+					};
+					
+					ctrl.getValueScope = function ( ) {
+						return valueScope;	
 					};
 					
 					ctrl.changeListeners = changeListeners;
@@ -92,7 +82,7 @@
 					});
 					
 					$element.bind('submit', function ( ) {
-						_.invoke(submitListeners, 'call', null, values);
+						_.invoke(submitListeners, 'call', null, ctrl.getValues());
 					});
 					
 					return ctrl;

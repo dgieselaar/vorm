@@ -21,9 +21,7 @@
 							
 							vormField.triggerViewChange();
 							
-							if(callback) {
-								callback();
-							}
+							callback();
 							
 							unwatch();
 						});

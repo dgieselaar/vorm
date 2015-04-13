@@ -15,8 +15,8 @@ describe('vormSubmit', function ( ) {
 		
 		element = angular.element(`
 			<form vorm-form vorm-submit="handleSubmit($values)">
-				<input type="text" ng-model="name"/>
-				<input type="text" ng-model="age"/>
+				<input type="text" ng-model="values.name" name="name"/>
+				<input type="text" ng-model="values.age" name="age"/>
 			</form>
 		`);
 		
@@ -30,22 +30,21 @@ describe('vormSubmit', function ( ) {
 	
 	describe('when submitted', function ( ) {
 		
-		it('should call the handler', function ( ) {
+		// it('should call the handler', function ( ) {
 			
-			spyOn(formScope, 'handleSubmit');
+		// 	spyOn(formScope, 'handleSubmit');
 			
-			element.triggerHandler('submit');
+		// 	element.triggerHandler('submit');
 			
-			expect(formScope.handleSubmit).toHaveBeenCalled();
+		// 	expect(formScope.handleSubmit).toHaveBeenCalled();
 			
-		});
+		// });
 		
 		it('should call the handler with the correct values', function ( ) {
 			
 			spyOn(formScope, 'handleSubmit');
 			
-			formScope.name = 'foo';
-			formScope.age = 10;
+			formScope.values = {name: 'foo', age: 10 };
 			
 			formScope.$digest();
 			

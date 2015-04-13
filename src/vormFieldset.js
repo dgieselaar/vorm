@@ -1,28 +1,54 @@
+/*global angular*/
 (function ( ) {
 	
 	angular.module('vorm')
-		.directive('vormFieldset', [ function ( ) {
+		.directive('vormFieldset', [ 'vormInvoke', function ( vormInvoke ) {
 			
 			return {
 				restrict: 'E',
+				require: [ 'vormFieldset', '^?vormForm' ],
 				template: `
 					<fieldset>
-						<vorm-field-template config="field" ng-repeat="field in vormFieldset.getFields()">
+						<vorm-field-template config="field" ng-repeat="field in vormFieldset.getFields() | filter:vormFieldset.isVisible:field">
 						</vorm-field-template>
 					</fieldset>
 				`,
-				scope: {
-					fields: '&'
-				},
 				replace: true,
-				controller: [ '$scope', function ( $scope ) {
+				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
 					
-					var ctrl = this;
+					let ctrl = this,
+						vormForm,
+						valueScope;
 					
-					ctrl.getFields = $scope.fields;
+					function getValues ( ) {
+						let vals = {};
+						
+						if(vormForm) {
+							vals = vormForm.getValues();
+						}
+						return vals;
+					}
+					
+					ctrl.link = function ( controllers ) {
+						vormForm = controllers[0];
+						if(vormForm) {
+							valueScope = vormForm.getValueScope();
+						}
+					};
+					
+					ctrl.getFields = function ( ) {
+						return $scope.$eval($attrs.fields);	
+					};
+					
+					ctrl.isVisible = function ( field ) {
+						return field.when === null || field.when === undefined ? true : !!vormInvoke.expr(field.when, valueScope, { $values: getValues() });
+					};
 					
 				}],
-				controllerAs: 'vormFieldset'
+				controllerAs: 'vormFieldset',
+				link: function ( scope, element, attrs, controllers  ) {
+					controllers.shift().link(controllers);
+				}
 			};
 			
 		}]);
