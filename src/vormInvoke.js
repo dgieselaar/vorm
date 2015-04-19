@@ -12,7 +12,7 @@
 				}
 				
 				if((_.isArray(invokable) && typeof _.last(invokable) === 'function') || invokable.$inject !== undefined) {
-					value = $injector.invoke(invokable, null, angular.copy(locals));
+					value = $injector.invoke(invokable, null, locals ? angular.copy(locals) : null);
 				} else if(typeof invokable === 'function') {
 					value = invokable();
 				} else {

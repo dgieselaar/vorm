@@ -2,8 +2,9 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Multiple controls per field</title>
+		<title>Dynamic forms</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular-animate.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
 
 		<!-- vorm -->
@@ -19,7 +20,7 @@
 		
 		
 <script id="app">
-	angular.module('app', [ 'vorm' ])
+	angular.module('app', [ 'vorm', 'ngAnimate' ])
 		.controller('FormController', [ function ( ) {
 			
 			var ctrl = this,
@@ -27,29 +28,99 @@
 				
 			fields = [
 				{
-					name: 'first_name',
+					name: 'title',
 					type: 'text',
-					label: 'First name',
+					label: 'Post title',
 					required: true
 				},
 				{
-					name: 'last_name',
-					type: 'text',
-					label: 'Last name',
+					name: 'content',
+					type: 'textarea',
+					label: 'Content',
 					required: true
 				},
 				{
-					name: 'names',
-					type: 'text',
-					label: 'Names of your children',
-					required: true,
-					valueType: {
-						type: 'list',
-						limit: 10,
-						addLabel: 'Add child'
-					}
+					name: 'category',
+					type: 'select',
+					label: 'Category',
+					data: {
+						options: getCategoryOptions()	
+					},
+					required: true
+				},
+				{
+					name: 'sub_category',
+					type: 'select',
+					label: 'Sub category',
+					data: {
+						options: [ '$values', function ( $values ) {
+							return $values.category ? $values.category.children : [];
+						}]
+					},
+					when: [ '$values', function ( $values ) {
+						return $values.category && $values.category.children && $values.category.children.length > 0;
+					}],
+					required: true
+				},
+				{
+					name: 'schedule',
+					type: 'checkbox',
+					label: 'Schedule this post for later?'
+				},
+				{
+					name: 'schedule_date',
+					type: 'date',
+					label: 'Post on',
+					when: '!!schedule',
+					required: true
 				}
 			];
+			
+			function getCategoryOptions ( ) {
+				return [
+					{
+						label: 'Programming',
+						value: {
+							id: 1,
+							children: [
+								'JavaScript',
+								'Ruby',
+								'Go',
+								'PHP'
+							].map(function ( lang ) {
+								return {
+									value: lang,
+									label: lang
+								};
+							})
+						}
+					},
+					{
+						label: 'Culture',
+						value: {
+							id: 2,
+							children: [
+								'Music',
+								'Movies',
+								'Books'
+							].map(function ( type ) {
+								return {
+									value: type,
+									label: type
+								};
+							})
+						}
+					},
+					{
+						label: 'Other',
+						value: {
+							id: 3
+						}
+					}
+				];
+			}
+			
+			console.log(fields);
 			
 			ctrl.getFields = function ( ) {
 				return fields;  
@@ -67,7 +138,9 @@
 		.config([ 'vormTemplateServiceProvider', function ( vormTemplateServiceProvider ) {
 			
 			vormTemplateServiceProvider.modifyModelTemplates(function ( el, type ) {
-				el.addClass('form-control');
+				if(type !== 'checkbox') {
+					el.addClass('form-control');
+				}
 				return el;
 			});
 			
@@ -99,6 +172,26 @@
 			
 			.vorm-delegate-button {
 				margin-top: 10px;
+			}
+			
+			.vorm-field {
+				transition:0.5s ease-in opacity;
+			}
+			
+			.vorm-field.ng-enter {
+				opacity: 0;
+			}
+			
+			.vorm-field.ng-enter-active {
+				opacity: 1;
+			}
+			
+			.vorm-field.ng-leave {
+				opacity: 1;
+			}
+			
+			.vorm-field.ng-leave-active {
+				opacity: 0;
 			}
 			
 		</style>

@@ -41,7 +41,7 @@
 					};
 					
 					ctrl.isVisible = function ( field ) {
-						return field.when === null || field.when === undefined ? true : !!vormInvoke.expr(field.when, valueScope, { $values: getValues() });
+						return field.when === null || field.when === undefined ? true : !!vormInvoke.expr(field.when, { $values: getValues() }, valueScope);
 					};
 					
 				}],
