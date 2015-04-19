@@ -35,11 +35,12 @@ For now, read the source code, [ping me on Twitter](https://twitter.com/plestik)
 * [03 - Using a custom theme (in this case, Angular Material)](http://plestik.github.io/vorm/examples/03/)
 * [04 - Core field types](http://plestik.github.io/vorm/examples/04/)
 * [05 - Allow multiple controls per field](http://plestik.github.io/vorm/examples/05/)
+* [06 - Dynamic forms](http://plestik.github.io/vorm/examples/06/)
 
 More to come!
 
 ### Things to do before the first release:
 - [x] Support all basic input types
-- [ ] Example of dynamic forms
+- [x] Example of dynamic forms
 - [ ] Ability to lock/unlock fields
 
