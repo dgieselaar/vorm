@@ -24,7 +24,7 @@
 						break;
 						
 						case VormValueType.LIST:
-						defaults = [];
+						defaults = [ null ];
 						break;
 						
 						case VormValueType.NAMED:
@@ -111,7 +111,8 @@
 				
 				function handleFormatterCall ( value ) {
 					// value changes from model
-					valueScope[name] = getModelValue();
+					let modelValue = getModelValue();
+					valueScope[name] = modelValue;
 					ctrl.triggerModelChange();
 					return value;
 				}
@@ -173,6 +174,10 @@
 					applyValueToControls();
 				};
 				
+				ctrl.setEmpty = function ( ) {
+					valueScope[name] = getDefaultValue();
+				};
+				
 				ctrl.isRequired = function ( ) {
 					return required;	
 				};
@@ -183,7 +188,7 @@
 				
 				ctrl.isEmpty = function ( ) {
 					return models.every(function ( model ) {
-						return model.$isEmpty();
+						return model.$isEmpty(model.$viewValue);
 					});
 				};
 				
@@ -195,6 +200,10 @@
 					
 					valueScope = scope;
 					valueScope[name] = val;
+				};
+				
+				ctrl.getValueScope = function ( ) {
+					return valueScope;	
 				};
 				
 				let chain = _('valid invalid dirty pristine touched untouched required empty'.split(' '))
@@ -210,6 +219,8 @@
 				ctrl.getClassObj = function ( ) {
 					return chain.value();
 				};
+				
+				ctrl.setEmpty();
 				
 				ctrl.viewChangeListeners = viewChangeListeners;
 				ctrl.modelChangeListeners = modelChangeListeners;

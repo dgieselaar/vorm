@@ -41,33 +41,37 @@ describe('vormControlList', function ( ) {
 	}]));
 	
 	it('should have a controller', function ( ) {
-		
 		expect(vormControlListCtrl).toBeDefined();
-		
 	});
 	
 	it('should have a delegate', function ( ) {
-		
 		expect(vormControlListCtrl.getDelegates().length).toBe(1);
 	});
 	
 	it('should create a delegate w/ the name foo', function ( ) {
 		
-		vormControlListCtrl.createDelegate('foo');
+		vormFieldCtrl.setValueType('named');
+		vormFieldCtrl.setValue({ foo: 'foo' });
 		
-		expect(vormControlListCtrl.getDelegates().length).toBe(2);
+		scope.$digest();
 		
-		expect(vormControlListCtrl.getDelegates()[1].getName()).toBe('foo');
+		expect(vormControlListCtrl.getDelegates().length).toBe(1);
+		
+		expect(vormControlListCtrl.getDelegates()[0].getName()).toBe('foo');
 		
 	});
 	
 	it('should create a delegate w/ the length of the array as name if undefined', function ( ) {
 		
-		vormControlListCtrl.createDelegate();
+		vormControlListCtrl.handleCreateClick();
+		
+		scope.$digest();
 		
 		expect(vormControlListCtrl.getDelegates()[1].getName()).toBe('1');
 		
-		vormControlListCtrl.createDelegate();
+		vormControlListCtrl.handleCreateClick();
+		
+		scope.$digest();
 		
 		expect(vormControlListCtrl.getDelegates()[2].getName()).toBe('2');
 		
@@ -77,7 +81,7 @@ describe('vormControlList', function ( ) {
 		
 		var delegate;
 		
-		vormControlListCtrl.createDelegate('foo');
+		vormControlListCtrl.handleCreateClick('foo');
 		
 		delegate = vormControlListCtrl.getDelegates()[0];
 		delegate.value = 'foo';
@@ -94,12 +98,16 @@ describe('vormControlList', function ( ) {
 		
 		var delegate;
 		
-		vormControlListCtrl.createDelegate('foo');
-		vormControlListCtrl.createDelegate('bar');
+		vormControlListCtrl.handleCreateClick();
+		vormControlListCtrl.handleCreateClick();
+		
+		scope.$digest();
 		
 		delegate = vormControlListCtrl.getDelegates()[1];
 		
-		vormControlListCtrl.removeDelegate(delegate);
+		vormControlListCtrl.handleClearClick(delegate);
+		
+		scope.$digest();
 		
 		expect(vormControlListCtrl.getDelegates()).not.toContain(delegate);
 		
@@ -119,7 +127,9 @@ describe('vormControlList', function ( ) {
 		
 		expect(vormControlListCtrl.reachedLimit()).toBe(false);
 		
-		vormControlListCtrl.createDelegate();
+		vormControlListCtrl.handleCreateClick();
+		
+		scope.$digest();
 		
 		expect(vormControlListCtrl.reachedLimit()).toBe(true);
 		
@@ -131,15 +141,7 @@ describe('vormControlList', function ( ) {
 		
 		vormControlListCtrl.handleCreateClick();
 		
-		expect(vormControlListCtrl.getDelegates().length).toBe(2);
-		
-	});
-	
-	it('should create a delegate on click', function ( ) {
-		
-		expect(vormControlListCtrl.getDelegates().length).toBe(1);
-		
-		vormControlListCtrl.handleCreateClick();
+		scope.$digest();
 		
 		expect(vormControlListCtrl.getDelegates().length).toBe(2);
 		
@@ -161,7 +163,9 @@ describe('vormControlList', function ( ) {
 	
 	it('should remove the control on clear click if there\'s more than one left', function ( ) {
 		
-		vormControlListCtrl.createDelegate();
+		vormControlListCtrl.handleCreateClick();
+		
+		scope.$digest();
 		
 		var delegate = vormControlListCtrl.getDelegates()[1];
 		
@@ -172,6 +176,8 @@ describe('vormControlList', function ( ) {
 		vormControlListCtrl.handleClearClick(delegate);
 		
 		expect(delegate.clearViewValue).not.toHaveBeenCalled();
+		
+		scope.$digest();
 		
 		expect(vormControlListCtrl.getDelegates()).not.toContain(delegate);
 		
@@ -188,6 +194,24 @@ describe('vormControlList', function ( ) {
 		scope.$digest();
 		
 		expect(spy).toHaveBeenCalled();
+		
+	});
+	
+	describe('when valueType is single', function ( ) {
+		
+		beforeEach(function ( ) {
+			
+			vormFieldCtrl.setValueType('single');
+			
+			scope.$digest();
+			
+		});
+		
+		it('should create a single delegate', function ( ) {
+			
+			expect(vormControlListCtrl.getDelegates().length).toBe(1);
+			
+		});
 		
 	});
 	

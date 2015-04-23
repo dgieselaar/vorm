@@ -6,31 +6,32 @@
 			
 			return {
 				require: [ 'ngModel', '^?vormField', '^?vormForm' ],
-				link: function ( scope, element, attrs, controllers ) {
+				compile: function ( ) {
+					return function link ( scope, element, attrs, controllers ) {
 					
-					let [ ngModel, vormField, vorm ] = controllers;
-					
-					if(vormField || vorm) {
+						let [ ngModel, vormField, vorm ] = controllers;
 						
-						if(!vormField) {
-							vormField = new VormFieldCtrl(attrs.name || attrs.ngModel, element[0]);
-							
-							if(vorm) {
-								vorm.addField(vormField);
-								scope.$on('$destroy', function ( ) {
-									vorm.removeField(vormField);
-								});
+						if(vormField || vorm) {
+						
+							if(!vormField) {
+								vormField = new VormFieldCtrl(attrs.name || attrs.ngModel, element[0]);
+								
+								if(vorm) {
+									vorm.addField(vormField);
+									scope.$on('$destroy', function ( ) {
+										vorm.removeField(vormField);
+									});
+								}
 							}
+							
+							vormField.addModel(ngModel);
+							
+							scope.$on('$destroy', function ( ) {
+								vormField.removeModel(ngModel);
+							});
+							
 						}
-						
-						vormField.addModel(ngModel);
-						
-						scope.$on('$destroy', function ( ) {
-							vormField.removeModel(ngModel);
-						});
-						
-					}
-					
+					};
 				}
 			};
 			

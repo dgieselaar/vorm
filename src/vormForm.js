@@ -23,6 +23,12 @@
 						});
 					}
 					
+					function getFieldByName ( name ) {
+						return _.find(fields, function ( field ) {
+							return field.getName() === name;
+						});
+					}
+					
 					ctrl.addField = function ( field ) {
 						fields.push(field);
 						field.viewChangeListeners.push(handleChange);
@@ -49,6 +55,14 @@
 							.value();
 						
 						return values;
+					};
+					
+					ctrl.getValue = function ( name ) {
+						return getFieldByName(name).getValue();
+					};
+					
+					ctrl.setValue = function ( name, value ) {
+						getFieldByName(name).setValue(value);
 					};
 					
 					ctrl.getValueScope = function ( ) {

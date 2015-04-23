@@ -46,7 +46,8 @@
 							
 							let focusable,
 								selector = 'input,keygen,meter,output,progress,select,textarea',
-								replace = $element.find('vorm-control-replace');
+								replace = $element.find('vorm-control-replace'),
+								delegate = $scope.$eval($attrs.delegate);
 							
 							replace.replaceWith(clonedElement);
 							
@@ -61,7 +62,11 @@
 							focusable.attr('id', ctrl.getInputId());
 							
 							$scope.$$postDigest(function ( ) {
-								$scope.$eval($attrs.delegate).setNgModel(clonedElement.controller('ngModel'));
+								delegate.setNgModel(clonedElement.controller('ngModel'));
+							});
+							
+							$scope.$on('$destroy', function ( ) {
+								delegate.unsetNgModel();
 							});
 						});
 					};
@@ -72,6 +77,14 @@
 					
 					ctrl.getInputId = function ( ) {
 						return inputId;
+					};
+					
+					ctrl.getViewValue = function ( ) {
+						return $scope.$eval($attrs.delegate).getViewValue();	
+					};
+							
+					ctrl.getDisplayMode = function ( ) {
+						return vormFieldConfig.getDisplayMode();
 					};
 					
 					if(angular.version.minor >= 4) {

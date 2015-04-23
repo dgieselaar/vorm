@@ -13,6 +13,18 @@
 						vormField,
 						vormForm;
 						
+					function getValues ( ) {
+						let values;
+						
+						if(vormForm) {
+							values = vormForm.getValues();
+						} else if(vormField) {
+							values = {};
+							values[vormField.getName()] = vormField.getValue();
+						}
+						return values;
+					}
+						
 					ctrl.link = function ( controllers ) {
 						vormField = controllers[0];
 						vormForm = controllers[1];
@@ -36,21 +48,22 @@
 						} else {
 							vormField.setRequired(config.required || false);
 						}
+						
+						if(config.defaults) {
+							vormField.setValue(ctrl.invoke(config.defaults));
+						}
 					};
 					
 					ctrl.invoke = function ( invokable ) {
-						let values;
-						
-						if(vormForm) {
-							values = vormForm.getValues();
-						} else if(vormField) {
-							values = {};
-							values[vormField.getName()] = vormField.getValue();
-						}
-						
 						return vormInvoke(invokable, {
-							$values: values
+							$values: getValues()
 						});
+					};
+					
+					ctrl.invokeExpr = function ( invokable ) {
+						return vormInvoke.expr(invokable, {
+							$values: getValues()
+						}, vormField.getValueScope());
 					};
 					
 					ctrl.getConfig = function ( ) {
@@ -74,6 +87,10 @@
 						}
 						
 						return limit;
+					};
+					
+					ctrl.getDisplayMode = function ( ) {
+						return ctrl.invokeExpr(config.disabled) ? 'display' : 'edit';
 					};
 					
 				}],

@@ -37,6 +37,30 @@
 							}
 						}
 					}
+					
+					function createDelegate ( name ) {
+						let delegate,
+							value;
+						
+						delegate = new VormModelDelegate(name);
+						
+						switch(vormField.getValueType()) {
+							case 'list':
+							value = vormField.getValue()[delegates.length];
+							break;
+							
+							case 'named':
+							value = vormField.getValue()[name];
+							break;
+							
+							case 'single':
+							value = vormField.getValue();
+							break;
+						}
+						
+						delegate.value = value;
+						delegates.push(delegate);
+					}
 						
 					ctrl.link = function ( controllers ) {
 						
@@ -48,26 +72,39 @@
 							ctrl.setLimit(limit);
 						});
 						
-						ctrl.createDelegate();
+						$scope.$watchCollection(function ( ) {
+							let keys,
+								val = vormField.getValue();
+								
+							switch(vormField.getValueType()) {
+								default:
+								keys = _.keys(val);
+								break;
+								
+								case 'single':
+								keys = null;
+								break;
+							}
+							
+							return keys;
+						}, function ( keys ) {
+							
+							delegates = [];
+							
+							if(!keys) {
+								createDelegate();
+							}
+							
+							_.each(keys, function ( key ) {
+								createDelegate(key);
+							});
+							
+						});
+						
 					};
 					
 					ctrl.getDelegates = function ( ) {
 						return delegates;	
-					};
-					
-					ctrl.createDelegate = function ( name ) {
-						let delegate;
-						
-						if(!name) {
-							name = delegates.length.toString();
-						}
-						
-						delegate = new VormModelDelegate(name);
-						delegates.push(delegate);
-					};
-					
-					ctrl.removeDelegate = function ( delegate ) {
-						_.pull(delegates, delegate);
 					};
 					
 					ctrl.clearDelegate = function ( delegate ) {
@@ -91,15 +128,21 @@
 					};
 					
 					ctrl.handleCreateClick = function ( ) {
-						ctrl.createDelegate();
+						vormField.setValue(vormField.getValue().concat(null));
 						triggerAsyncViewChange(setFocus);
 					};
 					
 					ctrl.handleClearClick = function ( delegate ) {
+						
 						if(delegates.length === 1) {
 							delegate.clearViewValue();
 						} else {
-							ctrl.removeDelegate(delegate);
+							let value = vormField.getValue(),
+								index = _.find(vormField.getModels(), { model: delegate.getNgModel() });
+								
+							value.splice(index, 1);
+							vormField.setValue(value);
+							
 							triggerAsyncViewChange(setFocus);
 						}
 					};

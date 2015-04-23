@@ -18,6 +18,7 @@ function getUnitTestFiles ( ) {
 		'src/**/_*.js',
 		'src/**/*.js',
 		'test/**/*.js'
+		// 'test/vormControlList.test.js'
 	];
 }
 

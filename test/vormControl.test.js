@@ -236,10 +236,9 @@ describe('vormControl', function ( ) {
 				limit: 2
 			});
 			
-			const listCtrl = element.find('vorm-control-list').controller('vormControlList');
 			const focusableCtrl = element.find('div').controller('vormFocusableList');
 			
-			listCtrl.createDelegate();
+			vormFieldCtrl.setValue([ null, null ]);
 			
 			spyOn(focusableCtrl, 'removeId').and.callThrough();
 			

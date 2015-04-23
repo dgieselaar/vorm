@@ -7,7 +7,7 @@
 			return function ( name ) {
 				
 				const delegate = {};
-				let ngModel;
+				let ngModel = null;
 				
 				delegate.value = null;
 				
@@ -15,8 +15,15 @@
 					return name;
 				};
 				
-				delegate.setNgModel = function ( ) {
-					ngModel = arguments[0];
+				delegate.setNgModel = function ( model ) {
+					ngModel = model;
+					if(ngModel) {
+						ngModel.$name = name;
+					}
+				};
+				
+				delegate.unsetNgModel = function ( ) {
+					ngModel = null;	
 				};
 				
 				delegate.getNgModel = function ( ) {
@@ -26,6 +33,10 @@
 				delegate.clearViewValue = function ( ) {
 					ngModel.$setViewValue(null);
 					ngModel.$render();
+				};
+				
+				delegate.getViewValue = function ( ) {
+					return ngModel ? ngModel.$viewValue : delegate.value;
 				};
 				
 				return delegate;

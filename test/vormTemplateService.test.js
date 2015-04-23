@@ -66,10 +66,13 @@ describe('vormTemplateService', function ( ) {
 				return el;
 			});
 			
+			vormTemplateServiceProvider.modifyDisplayTemplates(function ( ) {
+				return angular.element(`<custom-display/>`);
+			});
+			
 			vormTemplateServiceProvider.modifyTemplate(function ( ) {
 				return angular.element(`<custom-template></custom-template>`);
 			});
-			
 		}));
 		
 		beforeEach(inject([ '$rootScope', 'vormTemplateService', function (  ) {
@@ -83,6 +86,14 @@ describe('vormTemplateService', function ( ) {
 			const el = service.getModelCompiler('text')($rootScope.$new());
 			
 			expect(el[0].tagName.toLowerCase()).toBe('custom-input');
+			
+		});
+		
+		it('should return the modified default display template', function ( ) {
+			
+			const el = service.getDisplayCompiler('text')($rootScope.$new());
+			
+			expect(el[0].tagName.toLowerCase()).toBe('custom-display');
 			
 		});
 		

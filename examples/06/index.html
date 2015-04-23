@@ -4,7 +4,8 @@
 	<head>
 		<title>Dynamic forms</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular-animate.min.js"></script>
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular-animate.min.js"></script> -->
+		<script src="../../node_modules/angular-animate/angular-animate.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
 
 		<!-- vorm -->
@@ -21,7 +22,7 @@
 		
 <script id="app">
 	angular.module('app', [ 'vorm', 'ngAnimate' ])
-		.controller('FormController', [ function ( ) {
+		.controller('FormController', [ '$scope', function ( $scope ) {
 			
 			var ctrl = this,
 				fields;
@@ -44,7 +45,7 @@
 					type: 'select',
 					label: 'Category',
 					data: {
-						options: getCategoryOptions()	
+						options: getCategoryOptions()
 					},
 					required: true
 				},
@@ -54,11 +55,16 @@
 					label: 'Sub category',
 					data: {
 						options: [ '$values', function ( $values ) {
-							return $values.category ? $values.category.children : [];
+							var options = $values.category ? $values.category.children : [];
+							return options;
 						}]
 					},
 					when: [ '$values', function ( $values ) {
-						return $values.category && $values.category.children && $values.category.children.length > 0;
+						return (
+							$values.category && 
+							$values.category.children  &&
+							$values.category.children.length > 0
+						);
 					}],
 					required: true
 				},
@@ -71,8 +77,23 @@
 					name: 'schedule_date',
 					type: 'date',
 					label: 'Post on',
-					when: '!!schedule',
+					disabled: '!!schedule',
 					required: true
+				},
+				{
+					name: 'generateDeeplinkId',
+					type: 'checkbox',
+					label: 'Generate a deeplink for me',
+					defaults: true
+				},
+				{
+					name: 'deeplinkId',
+					type: 'text',
+					label: 'Deeplink ID',
+					required: true,
+					disabled: [ '$values', function ( $values ) {
+						return !!$values.generateDeeplinkId;
+					}]
 				}
 			];
 			
@@ -114,13 +135,17 @@
 					{
 						label: 'Other',
 						value: {
-							id: 3
+							id: 3,
+							children: [
+								{
+									value: 'Other',
+									label: 'Other'
+								}
+							]
 						}
 					}
 				];
 			}
-			
-			console.log(fields);
 			
 			ctrl.getFields = function ( ) {
 				return fields;  
@@ -130,8 +155,33 @@
 				console.log('submitted with', values);	
 			};
 			
-			ctrl.handleChange = function ( ) {
+			function setDeeplinkId ( ) {
+				var form = $scope.vormForm;
+				if(form.getValue('title')) {
+					form.setValue('deeplinkId', form.getValue('title').replace(/[^A-Za-z0-9]/g, '-').toLowerCase());
+				}
+			}
+			
+			ctrl.handleChange = function ( name ) {
 				console.log('change', arguments);
+				
+				var form = $scope.vormForm;
+				
+				switch(name) {
+					case 'title':
+					if(form.getValue('generateDeeplinkId')) {
+						setDeeplinkId();
+					}
+					break;
+					
+					case 'generateDeeplinkId':
+					setDeeplinkId();
+					break;
+					
+					case 'schedule':
+					form.setValue('schedule_date', new Date());
+					break;
+				}
 			};
 			
 		}])
@@ -145,6 +195,10 @@
 			});
 			
 			vormTemplateServiceProvider.modifyControlTemplate(function ( el ) {
+				
+				el.find('vorm-display').addClass('flip');
+				el.find('vorm-edit').addClass('flip');
+				
 				return el;
 			});
 			
@@ -161,9 +215,9 @@
 				content: " (*)";
 			}
 			
-			vorm-control {
+			vorm-edit,
+			vorm-display {
 				display: flex;
-				padding-bottom: 10px;
 			}
 			
 			.vorm-control-clear-button {
@@ -172,6 +226,10 @@
 			
 			.vorm-delegate-button {
 				margin-top: 10px;
+			}
+			
+			.vorm-field-empty vorm-display span::before {
+				content: "-";
 			}
 			
 			[vorm-field] {
@@ -192,6 +250,109 @@
 			
 			[vorm-field].ng-leave-active {
 				opacity: 0;
+			}
+			
+			vorm-control {
+				display: block;
+				position: relative;
+				margin-bottom: 10px;
+			}
+			
+			vorm-display {
+				padding: 6px 12px;
+				border: 1px solid transparent;
+			}
+			
+			vorm-edit,
+			vorm-display {
+				top: 0;
+				right: 0;
+				left: 0;
+			}
+			
+			vorm-edit.ng-hide-add,
+			vorm-display.ng-hide-add { 
+			  -webkit-animation: 0.5s flipOutX ease; 
+			  animation: 0.5s flipOutX ease; 
+			}
+
+			/* when showing the thing */
+			vorm-edit.ng-hide-remove,
+			vorm-display.ng-hide-remove { 
+			  -webkit-animation: 0.5s flipInX ease;
+			  animation: 0.5s flipInX ease;
+			  position: absolute;
+			}
+
+			/* ANIMATIONS (FROM ANIMATE.CSS) */
+
+			/* flip in */
+			@-webkit-keyframes flipInX {
+				
+				0% {
+					-webkit-transform: perspective(400px) rotate3d(1, 0, 0, 180deg);
+					transform: perspective(400px) rotate3d(1, 0, 0, 180deg);
+					-webkit-transition-timing-function: ease-in;
+					transition-timing-function: ease-in;
+					opacity: 0;
+				}
+				
+				100% {
+					-webkit-transform: perspective(400px) rotate3d(1, 0, 0, 0deg);
+					transform: perspective(400px) rotate3d(1, 0, 0, 0deg);
+					opacity: 1;
+				}
+			}
+			
+			@-webkit-keyframes flipOutX {
+				
+				0% {
+					-webkit-transform: perspective(400px) rotate3d(1, 0, 0, 180deg);
+					transform: perspective(400px) rotate3d(1, 0, 0, 180deg);
+					-webkit-transition-timing-function: ease-in;
+					transition-timing-function: ease-in;
+					opacity: 1;
+				}
+				
+				100% {
+					-webkit-transform: perspective(400px) rotate3d(1, 0, 0, 0deg);
+					transform: perspective(400px) rotate3d(1, 0, 0, 0deg);
+					opacity: 0;
+				}
+			}
+			
+			@keyframes flipInX {
+				
+				0% {
+					-webkit-transform: perspective(400px) rotate3d(1, 0, 0, 180deg);
+					transform: perspective(400px) rotate3d(1, 0, 0, 180deg);
+					-webkit-transition-timing-function: ease-in;
+					transition-timing-function: ease-in;
+					opacity: 0;
+				}
+				
+				100% {
+					-webkit-transform: perspective(400px) rotate3d(1, 0, 0, 0deg);
+					transform: perspective(400px) rotate3d(1, 0, 0, 0deg);
+					opacity: 1;
+				}
+			}
+			
+			@keyframes flipOutX {
+				
+				0% {
+					-webkit-transform: perspective(400px) rotate3d(1, 0, 0, 180deg);
+					transform: perspective(400px) rotate3d(1, 0, 0, 180deg);
+					-webkit-transition-timing-function: ease-in;
+					transition-timing-function: ease-in;
+					opacity: 1;
+				}
+				
+				100% {
+					-webkit-transform: perspective(400px) rotate3d(1, 0, 0, 0deg);
+					transform: perspective(400px) rotate3d(1, 0, 0, 0deg);
+					opacity: 0;
+				}
 			}
 			
 		</style>
