@@ -1,41 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Vorm by plestik</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Vorm by plestik</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Vorm</h1>
-        <p class="header">Write your Angular forms in JSON and HTML, use the same API</p>
+    <div id="container">
+      <div class="inner">
 
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/plestik/vorm/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/plestik/vorm/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/plestik/vorm">View On GitHub</a></li>
-        </ul>
+        <header>
+          <h1>Vorm</h1>
+          <h2>Write your Angular forms in JSON and HTML, use the same API</h2>
+        </header>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/plestik">plestik</a></p>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/plestik/vorm/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/plestik/vorm/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/plestik/vorm" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
+        <hr>
 
-      </header>
-      <section>
-        <p><img src="https://travis-ci.org/plestik/vorm.svg?branch=master" alt="Tests passing"></p>
+        <section id="main_content">
+          <p><img src="https://travis-ci.org/plestik/vorm.svg?branch=master" alt="Tests passing"></p>
 
 <h1>
 <a id="vorm" class="anchor" href="#vorm" aria-hidden="true"><span class="octicon octicon-link"></span></a>vorm</h1>
 
-<p>Write your Angular forms in JSON and HTML, use the same API.</p>
+<p>Generate dynamic, stateful Angular forms via JSON, JavaScript Objects or HTML and still talk to the same API.</p>
 
 <h2>
 <a id="what-does-vorm-do" class="anchor" href="#what-does-vorm-do" aria-hidden="true"><span class="octicon octicon-link"></span></a>What does vorm do?</h2>
@@ -43,35 +44,57 @@
 <p>Vorm is an Angular module for generating (via JSON/HTML) and decorating (HTML) forms and form controls. No matter how you write your forms, the same API is available. </p>
 
 <h2>
-<a id="what-makes-vorm-different-from-other-libraries" class="anchor" href="#what-makes-vorm-different-from-other-libraries" aria-hidden="true"><span class="octicon octicon-link"></span></a>What makes vorm different from other libraries?</h2>
-
-<p>Vorm has two features which as far as I can tell set it apart: </p>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
 
 <h4>
-<a id="1-use-both-json-and-html-for-generating-or-decorating-your-forms" class="anchor" href="#1-use-both-json-and-html-for-generating-or-decorating-your-forms" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Use both JSON and HTML for generating or decorating your forms</h4>
+<a id="generate-form-controls-with-json--javascript-objects" class="anchor" href="#generate-form-controls-with-json--javascript-objects" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generate form controls with JSON &amp; JavaScript objects</h4>
 
-<p>There are three ways to create a form:</p>
+<p>Simply pass an array of configuration objects (of which only <code>name</code> and <code>type</code> are optional) to <code>vorm</code> and it'll take care of the rest. Supported by default: <code>text</code>, <code>number</code>, <code>textarea</code>, <code>select</code>, <code>radio</code>, <code>checkbox</code>, <code>date</code>, and more.</p>
 
 <ul>
-<li>Using the <code>vorm-fieldset</code> directive and passing it an array of field configuration objects.</li>
-<li>Using the <code>vorm-fieldset-template</code> directive and specifying a name, type and label (and other optional attributes).</li>
-<li>Using the <code>vorm-field-wrapper</code> directive to decorate existing controls. The directive will unpack its contents and wrap it with the default wrapper template.</li>
+<li><a href="http://plestik.github.io/vorm/examples/01/">01 - Generate a simple form with JSON</a></li>
+<li><a href="http://plestik.github.io/vorm/examples/04/">04 - Core field types</a></li>
 </ul>
 
 <h4>
-<a id="2-multiple-controls-per-field-are-supported-out-of-the-box" class="anchor" href="#2-multiple-controls-per-field-are-supported-out-of-the-box" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Multiple controls per field are supported out of the box</h4>
+<a id="dynamic-form-state" class="anchor" href="#dynamic-form-state" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dynamic form state</h4>
 
-<p>You can add any number of controls, of any type, to a <code>vorm-field</code>, and it will resolve the values for you in a smart way. It makes two things easy: nested (mini-)forms and lists of controls. The latter is especially helpful if the user needs to provide a list for a certain property instead of just one value (for instance, a list of airports the user wishes to travel from). This is the main reason this library exists.</p>
-
-<h2>
-<a id="what-else-does-it-do" class="anchor" href="#what-else-does-it-do" aria-hidden="true"><span class="octicon octicon-link"></span></a>What else does it do?</h2>
+<p>You can easily adjust form state via so-called <code>invokables</code>, which can be a primitive, an object, a function or an array/injectable. Hide and show fields, change a label or the  options of a select box, or set the required state, based on form values or any other part of your application state.</p>
 
 <ul>
-<li>Customize/override wrap and control templates</li>
-<li>Dynamic data for controls via <em>invokables</em> (primitives, booleans or (annotated) functions)</li>
-<li>Various HTML form controls supported by default (<code>input</code>, <code>select</code>, <code>textarea</code> and all their variations)</li>
-<li>Easily add any custom control that depends on <code>ngModel</code>
-</li>
+<li><a href="http://plestik.github.io/vorm/examples/06/">06 - Dynamic forms</a></li>
+</ul>
+
+<h4>
+<a id="every-field-supports-any-number-of-controls" class="anchor" href="#every-field-supports-any-number-of-controls" aria-hidden="true"><span class="octicon octicon-link"></span></a>Every field supports any number of controls</h4>
+
+<p>The default number of controls for any field is 1, but you can allow the user to add any number of controls via the configuration object. This is very useful when you want to support more than one value. Think, for example, of a field which allows the user to fill in one or more IP addresses.</p>
+
+<ul>
+<li><a href="http://plestik.github.io/vorm/examples/05/">05 - Allow multiple controls per field</a></li>
+</ul>
+
+<h4>
+<a id="theming" class="anchor" href="#theming" aria-hidden="true"><span class="octicon octicon-link"></span></a>Theming</h4>
+
+<p>With the <code>vormTemplateServiceProvider</code> you can either customize or override the wrapper, control list, and model templates.</p>
+
+<ul>
+<li><a href="http://plestik.github.io/vorm/examples/03/">03 - Using a custom theme (in this case, Angular Material)</a></li>
+</ul>
+
+<h4>
+<a id="adding-your-own-controls" class="anchor" href="#adding-your-own-controls" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding your own controls</h4>
+
+<p><code>vorm</code> supports any control which is based on <code>ngModel</code> out of the box. No extra work is required (or even possible).</p>
+
+<h4>
+<a id="fine-grained-control" class="anchor" href="#fine-grained-control" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fine-grained control</h4>
+
+<p>You have access to all the building blocks, which means you can write your forms any which way you please. Via JSON, JavaScript Objects but also via HTML (including wrapping existing form controls via <code>vorm-field-wrapper</code>).</p>
+
+<ul>
+<li><a href="http://plestik.github.io/vorm/examples/02/">02 - Generate a simple form with HTML</a></li>
 </ul>
 
 <h2>
@@ -98,12 +121,15 @@
 <li>[x] Example of dynamic forms</li>
 <li>[ ] Ability to lock/unlock fields</li>
 </ul>
-      </section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
+        </section>
+
+        <footer>
+          Vorm is maintained by <a href="https://github.com/plestik">plestik</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
   </body>
 </html>
