@@ -31,13 +31,19 @@
 					name: 'title',
 					type: 'text',
 					label: 'Post title',
-					required: true
+					required: true,
+					data: {
+						placeholder: 'What would the title of the post be?'
+					}
 				},
 				{
 					name: 'content',
 					type: 'textarea',
 					label: 'Content',
-					required: true
+					required: true,
+					data: {
+						placeholder: 'What do you have to say?'
+					}
 				},
 				{
 					name: 'category',
@@ -70,25 +76,29 @@
 				{
 					name: 'schedule',
 					type: 'checkbox',
-					label: 'Schedule this post for later?'
+					data: {
+						checkboxLabel: 'Schedule this post for later'
+					},
+					defaults: true
 				},
 				{
 					name: 'schedule_date',
 					type: 'date',
-					label: 'Post on',
-					disabled: '!!schedule',
-					required: true
+					disabled: '!schedule',
+					required: true,
+					defaults: new Date()
 				},
 				{
 					name: 'generateDeeplinkId',
 					type: 'checkbox',
-					label: 'Generate a deeplink for me',
+					data: {
+						checkboxLabel: 'Automatically generate a deeplink'
+					},
 					defaults: true
 				},
 				{
 					name: 'deeplinkId',
 					type: 'text',
-					label: 'Deeplink ID',
 					required: true,
 					disabled: [ '$values', function ( $values ) {
 						return !!$values.generateDeeplinkId;
@@ -210,6 +220,10 @@
 				padding: 4px 0;
 			}
 			
+			.vorm-field-label:empty {
+				display: none;
+			}
+			
 			.vorm-field-required .vorm-field-label::after {
 				content: " (*)";
 			}
@@ -229,6 +243,11 @@
 			
 			.vorm-field-empty vorm-display span::before {
 				content: "-";
+			}
+			
+			[vorm-field=generateDeeplinkId],
+			[vorm-field=schedule] {
+				padding-top: 10px;
 			}
 			
 			[vorm-field] {
@@ -281,6 +300,14 @@
 			  -webkit-animation: 0.5s flipInX ease;
 			  animation: 0.5s flipInX ease;
 			  position: absolute;
+			}
+			
+			vorm-edit > label {
+				display: flex;
+			}
+			
+			input[type="checkbox"] {
+				margin-right: 5px;
 			}
 
 			/* ANIMATIONS (FROM ANIMATE.CSS) */
