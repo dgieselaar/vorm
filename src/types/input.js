@@ -10,8 +10,17 @@
 					.mapValues(function ( value, key ) {
 						var placeholder = _.includes('text search tel url email number password'.split(' '), key) ?
 							`placeholder="{{vormControl.invokeData('placeholder')}}"`
-							: '';
-						return `<input type="${key}" ${placeholder}/>`;
+							: '',
+							tpl = `<input type="${key}" ${placeholder} ng-model/>`;
+						
+						if(key === 'checkbox') {
+							tpl = 
+								'<label for="{{vormControl.getInputId()}}">' + 
+									tpl + 
+									'{{vormControl.invokeData("checkboxLabel")}}' + 
+								'</label>';
+						}
+						return tpl;
 					})
 					.value();
 					

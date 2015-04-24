@@ -165,6 +165,7 @@
 					if([ VormValueType.SINGLE, VormValueType.LIST, VormValueType.NAMED ].indexOf(type) === -1) {
 						throw new Error('Unsupported VormValueType: ' + VormValueType);
 					}
+					
 					valueType = type;
 					valueScope[name] = getDefaultValue();
 				};

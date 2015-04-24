@@ -18,7 +18,7 @@
 				restrict: 'E',
 				template: template,
 				replace: true,
-				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
+				controller: [ '$scope', '$attrs', '$element', function ( $scope, $attrs, $element ) {
 					
 					let ctrl = this,
 						config = $scope.$eval($attrs.config) || {},
@@ -38,6 +38,8 @@
 					}
 										
 					compiler = vormTemplateService.getModelCompiler(config.type, config.modelTemplate);
+					
+					$element.attr('vorm-field', config.name);
 					
 					ctrl.getConfig = function ( ) {
 						return config;	
