@@ -1,5 +1,16 @@
 /*global angular,_*/
 (function ( ) {
+	
+	/**
+	 * @ngdoc directive
+	 * @name vormControlList
+	 * @module vorm
+	 * @description
+	 
+	 This directives manages and displays the available controls.
+	 
+	 * __Requires__: `vormControlList`, `^vormFieldConfig`, `^?vormFocusableList`, `vormField`
+	 */
 
 	angular.module('vorm')
 		.directive('vormControlList', [  'VormModelDelegate', '$document', function ( VormModelDelegate, $document ) {

@@ -1,6 +1,18 @@
 /*global angular*/
 (function ( ) {
 	
+	/**
+	 * @ngdoc directive
+	 * @name ngModel
+	 * @module vorm
+	 * @description
+	 
+	 * This overloads the `ngModel` directive, and registers the `ngModelController`
+	 * with the `vormFieldController` and the `vormFormController` if they're there.
+	 
+	 * __Requires__: `ngModel`, `^?vormField`, `^?vormForm`
+	 */
+	
 	angular.module('vorm')
 		.directive('ngModel', [ 'VormFieldCtrl', function ( VormFieldCtrl ) {
 			

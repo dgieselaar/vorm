@@ -1,14 +1,28 @@
 /*global require,__dirname*/
 var gulp = require('gulp'),
 	sourcemaps = require('gulp-sourcemaps'),
-	cached = require('gulp-cached'),
-	plumber = require('gulp-plumber'),
 	babel = require('gulp-babel'),
 	uglify = require('gulp-uglify'),
-	remember = require('gulp-remember'),
 	concat = require('gulp-concat'),
-	header = require('gulp-header'),
-	karma = require('karma');
+	karma = require('karma'),
+	del = require('del'),
+	runSequence = require('run-sequence'),
+	dgeni;
+	
+dgeni = (function ( ) {
+	
+	var pkg;
+	
+	return function ( ) {
+		if(!pkg) {
+			pkg = {
+				Dgeni: require('dgeni')
+			};
+		}
+		return pkg;
+	};
+	
+})();
 	
 function getUnitTestFiles ( ) {
 	return [
@@ -18,32 +32,58 @@ function getUnitTestFiles ( ) {
 		'src/**/_*.js',
 		'src/**/*.js',
 		'test/**/*.js'
-		// 'test/vormControlList.test.js'
 	];
+}
+
+function getSrc ( ) {
+	return [ 'src/**/_*.js', 'src/**/*.js' ];
+}
+
+function concatenate ( ) {	
+	return gulp.src(getSrc())
+			.pipe(sourcemaps.init())
+				.pipe(concat('vorm.js'))
+				.pipe(babel())
+			.pipe(sourcemaps.write('.'))
+			.pipe(gulp.dest('.'));
 }
 
 function build ( ) {
 	
-	var stream =  gulp.src([ 'src/**/_*.js', 'src/**/*.js' ])
-		.pipe(sourcemaps.init())
-			.pipe(cached('js'))
-			.pipe(plumber())
-			.pipe(babel( {
-				blacklist: [ "useStrict" ]
-			}))
-			.pipe(uglify())
-			.pipe(remember('js'))
-			.pipe(concat('vorm.js', { newLine: '' }))
-			.pipe(header('"use strict";'))
-		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('.'));
+	return gulp.src(getSrc())
+			.pipe(sourcemaps.init())
+				.pipe(concat('vorm.min.js'))
+				.pipe(babel())
+				.pipe(uglify())
+			.pipe(sourcemaps.write('.'))
+			.pipe(gulp.dest('.'));
+	
+}
+
+function docs ( done ) {
+	
+	var inst,
+		Dgeni = dgeni().Dgeni;
 		
-	return stream;
+	console.log('generating docs');
+	
+	del.sync('./docs/partials/api');
+	inst = new Dgeni([require('./docs/dgeni-conf')]);
+	
+  	inst.generate()
+  		.then(function ( docs ) {
+  			console.log('generated ' + docs.length + ' pages');
+  			done();
+		});
 }
 
 gulp.task('default', function ( callback ) {
 	
-	gulp.watch('src/**/*.js', build);
+	gulp.watch('src/**/*.js', function ( ) {
+		return runSequence('concat', 'docs');
+	});
+	
+	gulp.watch('docs/templates/**/*.html', docs);
 	
 	karma.server.start({
 		configFile: __dirname + '/karma.conf.js',
@@ -52,6 +92,7 @@ gulp.task('default', function ( callback ) {
 	
 });
 
+gulp.task('concat', concatenate);
 gulp.task('build', build);
 
 gulp.task('test', function ( callback ) {
@@ -66,3 +107,5 @@ gulp.task('test', function ( callback ) {
 	});
 	
 });
+
+gulp.task('docs', [ 'concat' ], docs);

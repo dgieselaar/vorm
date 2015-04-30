@@ -1,6 +1,17 @@
 /*global angular*/
 (function ( ) { 
 	
+	/**
+	 * @ngdoc directive
+	 * @name vormChange
+	 * @module vorm
+	 * @description
+	 
+	 Evaluate the given expression when a value changes from the view.
+	 It listens to a viewchange event, which is dispatched from a 
+	 `vormFieldController` and then bubbles upwards.
+	 */
+	
 	angular.module('vorm')
 		.directive('vormChange', [ '$parse', function ( $parse ) {
 			
