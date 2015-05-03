@@ -1,0 +1,40 @@
+
+<h1>Directive components in <code>vorm</code></h1>
+
+
+
+<div class="component-breakdown">
+  <div>
+    <table class="definition-table">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+      <tr>
+        <td><a href="partials/api/vorm/directive/ngModel.html">ngModel</a></td>
+        <td><p>This overloads the <code>ngModel</code> directive, and registers the <code>ngModelController</code>
+with the <code>vormFieldController</code> and the <code>vormFormController</code> if they&#39;re there.</p>
+<p><strong>Requires</strong>: <code>ngModel</code>, <code>^?vormField</code>, <code>^?vormForm</code></p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><a href="partials/api/vorm/directive/vormChange.html">vormChange</a></td>
+        <td><p>Evaluate the given expression when a value changes from the view.
+  It listens to a viewchange event, which is dispatched from a 
+  <code>vormFieldController</code> and then bubbles upwards.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><a href="partials/api/vorm/directive/vormControlList.html">vormControlList</a></td>
+        <td><p>This directives manages and displays the available controls.</p>
+<p>  <strong>Requires</strong>: <code>^vormFieldConfig</code>, <code>^?vormFocusableList</code>, <code>vormField</code></p>
+</td>
+      </tr>
+      
+    </table>
+  </div>
+</div>
+

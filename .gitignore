@@ -1,4 +1,5 @@
 node_modules
+docs/partials
 coverage
 helpers.js
 *.sublime-project
