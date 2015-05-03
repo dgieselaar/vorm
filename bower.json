@@ -1,5 +1,5 @@
 {
-	"name": "vorm",
+	"name": "vormjs",
 	"version": "0.0.0",
 	"main": "./vorm.min.js",
 	"ignore": [],

@@ -1,5 +1,5 @@
 {
-  "name": "vorm",
+  "name": "vormjs",
   "version": "0.0.0",
   "description": "Write your forms in JSON and HTML, use the same API.",
   "main": "index.js",
