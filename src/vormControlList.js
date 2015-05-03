@@ -2,15 +2,26 @@
 (function ( ) {
 	
 	/**
-	 * @ngdoc directive
-	 * @name vormControlList
-	 * @module vorm
-	 * @description
+	
+	@ngdoc directive
+	@name vormControlList
+	@module vorm
+	
+	@description
 	 
-	 This directives manages and displays the available controls.
-	 
-	 * __Requires__: `vormControlList`, `^vormFieldConfig`, `^?vormFocusableList`, `vormField`
-	 */
+	This directives manages and displays the available controls.
+		 
+	 __Requires__: `^vormFieldConfig`, `^?vormFocusableList`, `vormField`
+	       
+	*/
+	
+	/**
+	
+	@ngdoc type
+	@name vormControlList.controller
+	@module vorm
+	       
+	*/
 
 	angular.module('vorm')
 		.directive('vormControlList', [  'VormModelDelegate', '$document', function ( VormModelDelegate, $document ) {
@@ -109,10 +120,21 @@
 							_.each(keys, function ( key ) {
 								createDelegate(key);
 							});
-							
 						});
 						
 					};
+					
+					/**
+					 * @ngdoc method
+					 * @name vormControlList.controller#$getDelegates
+					 *
+					 * @description
+					 
+					 Returns the list of the model delegates that are registered with the controller.
+					 
+					 * @returns {Array.<VormModelDelegate>} A list of the registered model delegates.
+					 */
+					 
 					
 					ctrl.getDelegates = function ( ) {
 						return delegates;	

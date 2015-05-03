@@ -1,8 +1,8 @@
 {
   "name": "vorm",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Write your forms in JSON and HTML, use the same API.",
-  "main": "dist/vorm.min.js",
+  "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/gulp test"
   },

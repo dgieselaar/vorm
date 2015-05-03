@@ -29,18 +29,18 @@ module.exports = new Package('dgeni-example',
 		templateFinder.templateFolders
 		      .unshift(path.resolve(__dirname, 'templates'));
 
-		  templateFinder.templatePatterns = [
-		    '${ doc.template }',
-		    '${ doc.id }.${ doc.docType }.template.html',
-		    '${ doc.id }.template.html',
-		    '${ doc.docType }.template.html',
-		    'common.template.html'
-		  ];
+		//   templateFinder.templatePatterns = [
+		//     '${ doc.template }',
+		//     '${ doc.id }.${ doc.docType }.template.html',
+		//     '${ doc.id }.template.html',
+		//     '${ doc.docType }.template.html',
+		//     'common.template.html'
+		//   ];
 
-		templateEngine.config.tags = {
-			variableStart: '{$',
-			variableEnd: '$}'
-		};
+		// templateEngine.config.tags = {
+		// 	variableStart: '{$',
+		// 	variableEnd: '$}'
+		// };
 		
 		var renderer = templateEngine.getRenderer;
 		
@@ -49,14 +49,13 @@ module.exports = new Package('dgeni-example',
 			
 			return function ( template, data ) {
 				
-				var breadcrumb = [],
-					nav = [],
+				var nav = [],
 					groups = _.filter(data.docs, { docType: 'componentGroup' });
 				
 				function getNavComponent ( component) {
 					return {
 						id: component.id,
-						url: outputFolder + '/' + component.outputPath,
+						url: component.outputPath,
 						label: component.name,
 						isCurrentComponent: component === data.doc
 					};
@@ -97,4 +96,18 @@ module.exports = new Package('dgeni-example',
 	})
 	.config(function(getLinkInfo) {
 		getLinkInfo.relativeLinks = true;
-	});
+	})
+	.config(function(computePathsProcessor) {
+	  computePathsProcessor.pathTemplates.push({
+	    docTypes: ['provider', 'service', 'directive', 'input', 'object', 'function', 'filter', 'type' ],
+	    pathTemplate: 'partials/${area}/${module}/${docType}/${name}.html',
+	    outputPathTemplate: 'partials/${area}/${module}/${docType}/${name}.html'
+	  });
+	  
+	  computePathsProcessor.pathTemplates.push({
+	    docTypes: ['module' ],
+	    pathTemplate: 'partials/${area}/${name}/index.html',
+	    outputPathTemplate: 'partials/${area}/${name}/index.html'
+	  });
+	  
+  	});

@@ -1,26 +1,36 @@
-{% extends 'base.template.html' %}
+{% extends "base.template.html" %}
 
-{% block body %}
-<div>
-  <h2>{$ doc.name $} Module</h2>
+{% block content %}
+<h1>
+  {% if doc.title %}{$ doc.title | marked $}{% else %}{$ doc.name $}{% endif %}
+</h1>
 
+{$ doc.description | marked $}
+
+<div class="component-breakdown">
+  <h2>Module Components</h2>
+  {% for componentGroup in doc.componentGroups %}
   <div>
-  {$ doc.description | marked $}
+    <h3 class="component-heading" id="{$ componentGroup.groupType | dashCase $}">{$ componentGroup.groupType | title $}</h3>
+    <table class="definition-table">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      {% for component in componentGroup.components %}
+      <tr>
+        <td>{$ component.id | link(component.name, component) $}</td>
+        <td>{$ component.description | firstParagraph | marked $}</td>
+      </tr>
+      {% endfor %}
+    </table>
   </div>
-  {% include "partials/dependencies.template.html" %}
+  {% endfor %}
 </div>
 
-{% for groupName, group in doc.groups %}
-{% if group.children.length %}
-<material-divider></material-divider>
-<h3>{$ group $}</h3>
-<ul>
-{% for component in group.children %}
-<li>{$ component $}
-    {%- if component.description %} - {$ component.description $}{% endif -%}
-</li>
-{%- endfor %}
-</ul>
-{%- endif %}
-{%- endfor %}
+{% if doc.usage %}
+  <h2>Usage</h2>
+  {$ doc.usage | marked $}
+{% endif %}
+
 {% endblock %}

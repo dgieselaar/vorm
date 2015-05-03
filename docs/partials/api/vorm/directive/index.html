@@ -1,147 +1,40 @@
-<!DOCTYPE html>
-<html ng-app="app">
-<head>
-  <title>Vorm API docs</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/0.8.3/angular-material.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular-animate.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular-aria.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/0.8.3/angular-material.min.js"></script>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
-  
-  <meta name="viewport" content="initial-scale=1" />
-  
-  <base href="/docs"/>
-  
-  <script type="text/javascript">
-  	angular.module('app', ['ngMaterial', 'ngAnimate', 'ngAria']);
-  </script>
-  
-  <style>
-    
-    md-toolbar {
-      padding-left: 1.5em;
-    }
-    
-    md-toolbar > h6 {
-      padding: 0;
-      margin: 0;
-      line-height: 4em;
-    }
-    
-    .md-sidenav-left > md-toolbar {
-      padding-left: 1em;
-    }
-    
-    .doc-body {
-      padding-left: 2em;
-    }
-    
-    .doc-menu-holder {
-      padding-top: 0.5em;
-    }
-    
-    .doc-menu {
-      display: flex;
-      flex-direction: column;
-      padding: 0em;
-      margin: 0;
-    }
-    
-    .doc-menu-header {
-      padding: 0.5em;
-      margin: 0.5em;
-    }
-    
-    .doc-menu-item {
-      display: flex;
-      padding: 0;
-      margin: 0;
-    }
-    
-    .doc-menu-item-link {
-      display: flex;
-      flex: 1;
-      padding: 0.5em 1em;
-      margin: 0;
-      text-decoration-none;
-    }
-    
-    code {
-      background-color: #F2f2f2;
-      border: 1px solid #CCC;
-      padding: 2px 4px;
-      border-radius: 2px;
-    }
-    
-  </style>
-  
-</head>
-<body
-  layout="vertical"
-  class="md-default-theme">
-  
-  <div layout="row" flex>
-  
-    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-is-locked-open="true">
-        <md-toolbar>
-          <h6>Vorm API Docs</h6>
-        </md-toolbar>
-        <md-content class="doc-menu-holder">
-          <ul class="doc-menu">
-          
-            
-            
-              <h4 class="doc-menu-header">Modules</h4>
-              
-              
-                <li class="doc-menu-item">
-                  <a class="doc-menu-item-link" href="docs/partials/api/vorm/index.html">vorm</a>
-                </li>
-              
-            
-            
-            
-              <h4 class="doc-menu-header">Directives</h4>
-              
-              
-                <li class="doc-menu-item">
-                  <a class="doc-menu-item-link" href="docs/partials/api/vorm/directive/ngModel.html">ngModel</a>
-                </li>
-              
-                <li class="doc-menu-item">
-                  <a class="doc-menu-item-link" href="docs/partials/api/vorm/directive/vormChange.html">vormChange</a>
-                </li>
-              
-                <li class="doc-menu-item">
-                  <a class="doc-menu-item-link" href="docs/partials/api/vorm/directive/vormControlList.html">vormControlList</a>
-                </li>
-              
-            
-            
-          </ul>
-        </md-content>
-    </md-sidenav>
-    
-    <div flex>
-    
-      <md-toolbar class="doc-header">
-        <h6>Componentgroups > directive components in vorm</h6>
-      </md-toolbar>
-        
-      <md-content class="doc-body">
-        
-<h2>directive components in vorm</h2>
-<strong>(componentGroup)</strong>
 
-<p></p>
+<h1>Directive components in <code>vorm</code></h1>
 
 
 
-      </md-content>
-    </div>
-    
+<div class="component-breakdown">
+  <div>
+    <table class="definition-table">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      
+      <tr>
+        <td><a href="partials/api/vorm/directive/ngModel.html">ngModel</a></td>
+        <td><p>This overloads the <code>ngModel</code> directive, and registers the <code>ngModelController</code>
+with the <code>vormFieldController</code> and the <code>vormFormController</code> if they&#39;re there.</p>
+<p><strong>Requires</strong>: <code>ngModel</code>, <code>^?vormField</code>, <code>^?vormForm</code></p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><a href="partials/api/vorm/directive/vormChange.html">vormChange</a></td>
+        <td><p>Evaluate the given expression when a value changes from the view.
+  It listens to a viewchange event, which is dispatched from a 
+  <code>vormFieldController</code> and then bubbles upwards.</p>
+</td>
+      </tr>
+      
+      <tr>
+        <td><a href="partials/api/vorm/directive/vormControlList.html">vormControlList</a></td>
+        <td><p>This directives manages and displays the available controls.</p>
+<p>  <strong>Requires</strong>: <code>^vormFieldConfig</code>, <code>^?vormFocusableList</code>, <code>vormField</code></p>
+</td>
+      </tr>
+      
+    </table>
   </div>
-  
-</body>
-</html>
+</div>
+

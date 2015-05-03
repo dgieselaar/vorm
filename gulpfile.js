@@ -73,8 +73,10 @@ function docs ( done ) {
   	inst.generate()
   		.then(function ( docs ) {
   			console.log('generated ' + docs.length + ' pages');
-  			done();
-		});
+		})
+		.finally(function ( ) {
+			done();
+		})
 }
 
 gulp.task('default', function ( callback ) {
