@@ -1,6 +1,6 @@
 {
   "name": "vormjs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "./vorm.min.js",
   "ignore": [],
   "dependencies": {
