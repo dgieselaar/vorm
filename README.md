@@ -1,6 +1,6 @@
 ![Tests passing](https://travis-ci.org/plestik/vorm.svg?branch=master)
 # vorm
-Generate dynamic, stateful Angular forms via JSON, JavaScript Objects or HTML and still talk to the same API.
+Generate dynamic, stateful Angular forms via JSON, JavaScript Objects or HTML and still talk to the same API. Vorm is largely based on my experiences with writing another Angular form generator. It (kind of) favors immutability & functional programming over shared mutable state and parsed expressions. It's backed by over 80 tests, with close to 100% code coverage.
 
 ## What does vorm do?
 
@@ -53,9 +53,4 @@ For now, read the source code, [ping me on Twitter](https://twitter.com/plestik)
 * [05 - Allow multiple controls per field](http://plestik.github.io/vorm/examples/05/)
 * [06 - Dynamic forms](http://plestik.github.io/vorm/examples/06/)
 
-More to come!
-
-### Things to do before the first release:
-- [x] Support all basic input types
-- [x] Example of dynamic forms
-- [ ] Ability to lock/unlock fields
+[Woefully incomplete documentation](http://plestik.github.io/docs/partials/api/vorm/index.html)
