@@ -45,6 +45,14 @@ You have access to all the building blocks, which means you can write your forms
 
 ## How do I get started?
 
+`vorm` is available on both npm and bower as _vormjs_.
+
+npm:
+`$ npm install vormjs`
+
+bower:
+`$ bower install vormjs`
+
 For now, read the source code, [ping me on Twitter](https://twitter.com/plestik), or check out the examples:
 * [01 - Generate a simple form with JSON](http://plestik.github.io/vorm/examples/01/)
 * [02 - Generate a simple form with HTML](http://plestik.github.io/vorm/examples/02/)
