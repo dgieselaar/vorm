@@ -10,7 +10,7 @@ Vorm is an Angular module for generating (via JSON/HTML) and decorating (HTML) f
 
 #### Generate form controls with JSON & JavaScript objects 
 
-Simply pass an array of configuration objects (of which only `name` and `type` are optional) to `vorm` and it'll take care of the rest. Supported by default: `text`, `number`, `textarea`, `select`, `radio`, `checkbox`, `date`, and more.
+Simply pass an array of configuration objects (of which only `name` and `type` are required) to `vorm` and it'll take care of the rest. Supported by default: `text`, `number`, `textarea`, `select`, `radio`, `checkbox`, `date`, and more.
 
 * [01 - Generate a simple form with JSON](http://plestik.github.io/vorm/examples/01/)
 * [04 - Core field types](http://plestik.github.io/vorm/examples/04/)
