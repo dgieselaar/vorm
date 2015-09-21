@@ -1,4 +1,7 @@
-/*global describe,beforeEach,module,inject,it,angular,expect,spyOn,jasmine*/
+import angular from 'angular';
+import 'angular-mocks';
+import '../src/vorm';
+
 describe('vormControlList', function ( ) {
 	
 	var element,
@@ -6,16 +9,16 @@ describe('vormControlList', function ( ) {
 		vormFieldCtrl,
 		vormControlListCtrl;
 	
-	beforeEach(module('vorm'));
+	beforeEach(angular.mock.module('vorm'));
 	
-	beforeEach(inject([ '$rootScope', '$compile', '$document', function ( ) {
+	beforeEach(angular.mock.inject([ '$rootScope', '$compile', '$document', function ( ) {
 		
 		var [ $rootScope, $compile, $document ] = arguments;
 			
-		element = angular.element(`		                          
-			<vorm-field-template config="config">
-			</vorm-field-template>
-		`);
+		element = angular.element(
+			`<vorm-field-template config="config">
+			</vorm-field-template>`
+		);
 		
 		$document.find('body').append(element);
 		

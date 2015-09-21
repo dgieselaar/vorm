@@ -1,27 +1,41 @@
 /*global module*/
 
+var webpackConfig = require('./webpack.config');
+
+var spartaLoader;
+
+spartaLoader =
+	{
+		test: /\.js$/,
+		loader: 'isparta',
+		exclude: [ /node_modules/, /test/ ]
+	};
+
+webpackConfig.module.preLoaders = webpackConfig.module.preLoaders ? webpackConfig.module.preLoaders.concat(spartaLoader) : [ spartaLoader ];
+
+
 module.exports = function ( config ) {
 	
 	config.set({
 		basePath: '.',
 		autoWatch: true,
-		frameworks: [  'jasmine' ],
+		frameworks: [ 'jasmine' ],
 		browsers: [ 'PhantomJS'],
 		plugins: [
-			'karma-phantomjs-launcher',
-			'karma-jasmine',
-			'karma-babel-preprocessor',
-			'karma-coverage'
+			require('karma-phantomjs-launcher'),
+			require('karma-jasmine'),
+			require('karma-webpack'),
+			require('karma-coverage'),
+			require('phantomjs-polyfill'),
+			require('karma-sourcemap-loader')
 		],
-		reporters: [ 'progress', 'coverage' ],
+		reporters: [ 'dots', 'coverage' ],
 		preprocessors: {
-			'./src/**/*.js': [ 'babel', 'coverage' ],
-			'./test/**/*.js': [ 'babel' ]
+			'test/index.js': [ 'webpack', 'sourcemap' ]
 		},
-		babelPreprocessor: {
-			options: {
-				auxiliaryComment: 'istanbul ignore next'
-			}
+		webpack: webpackConfig,
+		webpackServer: {
+			noInfo: true
 		}
 	});
 	

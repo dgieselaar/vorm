@@ -1,4 +1,7 @@
-/*global describe, beforeEach,module,inject,angular,spyOn,it,expect,jasmine*/
+import angular from 'angular';
+import 'angular-mocks';
+import '../src/vorm';
+
 describe('vormSubmit', function ( ) {
 	
 	var element,
@@ -6,9 +9,9 @@ describe('vormSubmit', function ( ) {
 		formScope,
 		$compile;
 		
-	beforeEach(module('vorm'));
+	beforeEach(angular.mock.module('vorm'));
 	
-	beforeEach(inject([ '$rootScope', '$compile', function ( ) {
+	beforeEach(angular.mock.inject([ '$rootScope', '$compile', function ( ) {
 		
 		$rootScope = arguments[0];
 		$compile = arguments[1];
@@ -30,15 +33,15 @@ describe('vormSubmit', function ( ) {
 	
 	describe('when submitted', function ( ) {
 		
-		// it('should call the handler', function ( ) {
+		it('should call the handler', function ( ) {
 			
-		// 	spyOn(formScope, 'handleSubmit');
+			spyOn(formScope, 'handleSubmit');
 			
-		// 	element.triggerHandler('submit');
+			element.triggerHandler('submit');
 			
-		// 	expect(formScope.handleSubmit).toHaveBeenCalled();
+			expect(formScope.handleSubmit).toHaveBeenCalled();
 			
-		// });
+		});
 		
 		it('should call the handler with the correct values', function ( ) {
 			

@@ -1,4 +1,7 @@
-/*global describe,beforeEach,module,inject,angular,it,expect,spyOn*/
+import angular from 'angular';
+import 'angular-mocks';
+import '../src/vorm';
+
 describe('vormDelegateButton', function ( ) {
 	
 	var $rootScope,
@@ -6,9 +9,9 @@ describe('vormDelegateButton', function ( ) {
 		element,
 		buttonCtrl;
 	
-	beforeEach(module('vorm'));
+	beforeEach(angular.mock.module('vorm'));
 	
-	beforeEach(inject([ '$rootScope', '$compile', function ( ) {
+	beforeEach(angular.mock.inject([ '$rootScope', '$compile', function ( ) {
 		
 		$rootScope = arguments[0];
 		$compile = arguments[1];

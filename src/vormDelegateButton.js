@@ -1,15 +1,14 @@
-/*global angular*/
-(function ( ) {
+import angular from 'angular';
 	
 	angular.module('vorm')
 		.directive('vormDelegateButton', [ function ( ) {
 		
 		return {
 			require: [ 'vormDelegateButton', '^vormFieldConfig', '^vormControlList', '^vormField' ],
-			template: 
-			'<button class="vorm-delegate-button" type="button" ng-click="vormDelegateButton.handleClick()" ng-disabled="vormDelegateButton.isDisabled()" ng-show="vormDelegateButton.isVisible()">' +
-				'{{vormDelegateButton.getLabel()}}' + 
-			'</button>',
+			template:
+				`<button class="vorm-delegate-button" type="button" ng-click="vormDelegateButton.handleClick()" ng-disabled="vormDelegateButton.isDisabled()" ng-show="vormDelegateButton.isVisible()">
+					{{vormDelegateButton.getLabel()}}
+				</button>`,
 			replace: true,
 			controller: [ function ( ) {
 				
@@ -54,5 +53,3 @@
 		};
 		
 	}]);
-	
-})();

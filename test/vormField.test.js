@@ -1,13 +1,16 @@
-/*global describe,beforeEach,module,it,angular,inject,expect*/
+import angular from 'angular';
+import 'angular-mocks';
+import '../src/vorm';
+
 describe('vormField', function ( ) {
 	
 	let $rootScope,
 		$compile,
 		VormValueType;
 		
-	beforeEach(module('vorm'));
+	beforeEach(angular.mock.module('vorm'));
 	
-	beforeEach(inject([ '$rootScope', '$compile', 'VormValueType', function ( ) {
+	beforeEach(angular.mock.inject([ '$rootScope', '$compile', 'VormValueType', function ( ) {
 		
 		$rootScope = arguments[0];
 		$compile = arguments[1];
@@ -50,7 +53,7 @@ describe('vormField', function ( ) {
 			
 		});
 		
-		it('should have the model', function ( )  {
+		it('should have the model', function ( ) {
 			
 			expect(ctrl.getModels()[0]).toBe(nameCtrl);
 			

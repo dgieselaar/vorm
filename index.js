@@ -1,3 +1,3 @@
-var vorm = require('./vorm.min.js');
+import vorm from './src/vorm';
 
-module.exports = 'vorm';
+export default vorm;

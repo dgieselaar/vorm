@@ -1,4 +1,7 @@
-/*global describe,beforeEach,module,inject,expect,it,angular*/
+import angular from 'angular';
+import 'angular-mocks';
+import '../src/vorm.js';
+
 describe('vormTemplateService', function ( ) {
 	
 	let service,
@@ -6,9 +9,9 @@ describe('vormTemplateService', function ( ) {
 	
 	describe('with defaults', function ( ) {
 		
-		beforeEach(module('vorm'));
+		beforeEach(angular.mock.module('vorm'));
 		
-		beforeEach(inject([ '$rootScope', 'vormTemplateService', function ( ) {
+		beforeEach(angular.mock.inject([ '$rootScope', 'vormTemplateService', function ( ) {
 			
 			$rootScope = arguments[0];
 			service = arguments[1];
@@ -55,7 +58,7 @@ describe('vormTemplateService', function ( ) {
 	
 	describe('with modifications', function ( ) {
 		
-		beforeEach(module('vorm', function ( vormTemplateServiceProvider ) {
+		beforeEach(angular.mock.module('vorm', function ( vormTemplateServiceProvider ) {
 			
 			vormTemplateServiceProvider.modifyModelTemplates(function ( el, type ) {
 				
@@ -75,7 +78,7 @@ describe('vormTemplateService', function ( ) {
 			});
 		}));
 		
-		beforeEach(inject([ '$rootScope', 'vormTemplateService', function (  ) {
+		beforeEach(angular.mock.inject([ '$rootScope', 'vormTemplateService', function ( ) {
 			$rootScope = arguments[0];
 			service = arguments[1];
 		}]));

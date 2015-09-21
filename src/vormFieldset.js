@@ -1,18 +1,16 @@
-/*global angular*/
-(function ( ) {
-	
+import angular from 'angular';
+
 	angular.module('vorm')
 		.directive('vormFieldset', [ 'vormInvoke', function ( vormInvoke ) {
 			
 			return {
 				restrict: 'E',
 				require: [ 'vormFieldset', '^?vormForm' ],
-				template: `
-					<fieldset>
+				template:
+					`<fieldset>
 						<vorm-field-template config="field" ng-repeat="field in vormFieldset.getFields() | filter:vormFieldset.isVisible:field">
 						</vorm-field-template>
-					</fieldset>
-				`,
+					</fieldset>`,
 				replace: true,
 				controller: [ '$scope', '$attrs', function ( $scope, $attrs ) {
 					
@@ -37,7 +35,7 @@
 					};
 					
 					ctrl.getFields = function ( ) {
-						return $scope.$eval($attrs.fields);	
+						return $scope.$eval($attrs.fields);
 					};
 					
 					ctrl.isVisible = function ( field ) {
@@ -46,11 +44,9 @@
 					
 				}],
 				controllerAs: 'vormFieldset',
-				link: function ( scope, element, attrs, controllers  ) {
+				link: function ( scope, element, attrs, controllers ) {
 					controllers.shift().link(controllers);
 				}
 			};
 			
 		}]);
-	
-})();

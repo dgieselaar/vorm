@@ -1,4 +1,7 @@
-/*global angular,describe,beforeEach,inject,module,it,expect,jasmine*/
+import angular from 'angular';
+import 'angular-mocks';
+import '../src/vorm';
+
 describe('vormForm', function ( ) {
 	
 	var scope,
@@ -6,9 +9,9 @@ describe('vormForm', function ( ) {
 		vormCtrl,
 		modelCtrls;
 	
-	beforeEach(module('vorm'));
+	beforeEach(angular.mock.module('vorm'));
 	
-	beforeEach(inject([ '$rootScope', '$compile', function ( ) {
+	beforeEach(angular.mock.inject([ '$rootScope', '$compile', function ( ) {
 		
 		var [ $rootScope, $compile ] = arguments;
 		

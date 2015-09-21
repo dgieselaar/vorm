@@ -1,11 +1,8 @@
-/*global angular*/
-(function ( ) {
-	
-	angular.module('vorm')
-		.constant('VormValueType',{
-			SINGLE: 'single',
-			LIST: 'list',
-			NAMED: 'named'
-		});
-	
-})();
+import angular from 'angular';
+
+angular.module('vorm')
+	.constant('VormValueType', {
+		SINGLE: 'single',
+		LIST: 'list',
+		NAMED: 'named'
+	});

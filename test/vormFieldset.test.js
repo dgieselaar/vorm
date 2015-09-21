@@ -1,4 +1,8 @@
-/*global describe,beforeEach,module,inject,describe,it,expect,angular,_*/
+import angular from 'angular';
+import 'angular-mocks';
+import '../src/vorm';
+import _ from 'lodash';
+
 describe('vormFieldset', function ( ) {
 	
 	var scope,
@@ -6,11 +10,11 @@ describe('vormFieldset', function ( ) {
 		setCtrl,
 		vormFormCtrl;
 	
-	beforeEach(module('vorm'));
+	beforeEach(angular.mock.module('vorm'));
 	
-	beforeEach(inject(['$rootScope', '$compile', function (  ) {
+	beforeEach(angular.mock.inject(['$rootScope', '$compile', function ( ) {
 		
-		var [ $rootScope, $compile ]  = arguments;
+		var [ $rootScope, $compile ] = arguments;
 		
 		scope = $rootScope.$new();
 		
@@ -75,8 +79,8 @@ describe('vormFieldset', function ( ) {
 				label: 'Telephone',
 				when: 'name==="foo"'
 			},
-			fieldCtrl =_.find(vormFormCtrl.getFields(), function ( field ) {
-				return field.getName() === 'name';
+			fieldCtrl = _.find(vormFormCtrl.getFields(), function ( f ) {
+				return f.getName() === 'name';
 			});
 		
 		expect(setCtrl.isVisible(field)).toBe(false);

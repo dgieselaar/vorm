@@ -1,10 +1,14 @@
+import angular from 'angular';
+import 'angular-mocks';
+import '../src/vorm';
+
 describe('vormInvoke', function ( ) {
 	
 	let vormInvoke;
 	
-	beforeEach(module('vorm'));
+	beforeEach(angular.mock.module('vorm'));
 	
-	beforeEach(inject([ 'vormInvoke', function ( ) {
+	beforeEach(angular.mock.inject([ 'vormInvoke', function ( ) {
 		vormInvoke = arguments[0];
 	}]));
 	
@@ -51,6 +55,8 @@ describe('vormInvoke', function ( ) {
 	});
 	
 	it('should throw an error if an unknown service or local is injected', function ( ) {
+
+		var spy = jasmine.createSpy();
 		
 		expect(function ( ) {
 			vormInvoke([ '$invalid', spy ], { $value: 'foo'});
